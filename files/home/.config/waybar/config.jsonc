@@ -1,0 +1,12 @@
+{
+  "layer": "top",
+  "height": 30,
+  "modules-left": ["hyprland/workspaces"],
+  "modules-center": ["clock"],
+  "modules-right": ["tray", "pulseaudio", "cpu", "memory", "network"],
+  "clock": { "format": "{:%a %d %b  %H:%M}" },
+  "pulseaudio": { "format": "{volume}% {icon}", "format-icons": { "default": ["", "", ""] }, "on-click": "pavucontrol" },
+  "cpu": { "format": "{usage}% " },
+  "memory": { "format": "{used:0.1f}G " },
+  "network": { "format-ethernet": "{ipaddr} ", "format-disconnected": "offline ⚠" }
+}

@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+"""Per-core Curve Optimizer for the Ryzen 7 5800X3D via the ryzen_smu driver.
+
+SMU MP1 opcodes (0x35 set per-core, 0x48 get per-core, 0x36 reset all) are the ones
+used by github.com/svenlange2/Ryzen-5800x3d-linux-undervolting (ruv.py).
+Offsets reset on every power cycle; pbo-curve.service re-applies them.
+"""
+import struct
+import sys
+import time
+
+# Core 0..7, same order and values as PBO2 Tuner on Windows (all negative).
+OFFSETS = [-27, -29, -29, -30, -28, -30, -27, -28]
+
+DRV = "/sys/kernel/ryzen_smu_drv/"
+SMU_ARGS = DRV + "smu_args"
+MP1_CMD = DRV + "mp1_smu_cmd"
+
+OP_SET_CORE = 0x35
+OP_RESET_ALL = 0x36
+OP_GET_CORE = 0x48
+SMU_OK = 0x01
+
+
+def die(msg):
+    print(f"pbo-curve: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+
+def read32(path):
+    with open(path, "rb") as f:
+        return struct.unpack("<I", f.read(4))[0]
+
+
+def wait_ready():
+    for _ in range(50):
+        status = read32(MP1_CMD)
+        if status != 0:
+            return status
+        time.sleep(0.1)
+    die("SMU stayed busy for 5 s")
+
+
+def smu(op, arg0=0):
+    wait_ready()
+    with open(SMU_ARGS, "wb") as f:
+        f.write(struct.pack("<6I", arg0, 0, 0, 0, 0, 0))
+    with open(MP1_CMD, "wb") as f:
+        f.write(struct.pack("<I", op))
+    status = wait_ready()
+    if status != SMU_OK:
+        die(f"SMU command 0x{op:02X} failed (status 0x{status:02X})")
+    with open(SMU_ARGS, "rb") as f:
+        return struct.unpack("<6I", f.read(24))[0]
+
+
+def core_arg(core):
+    return ((core & 8) << 5 | core & 7) << 20
+
+
+def get_offset(core):
+    value = smu(OP_GET_CORE, core_arg(core))
+    return value - 2**32 if value >= 2**31 else value
+
+
+def set_offset(core, offset):
+    smu(OP_SET_CORE, core_arg(core) | (offset & 0xFFFF))
+
+
+def preflight():
+    try:
+        with open("/proc/cpuinfo") as f:
+            if "5800X3D" not in f.read():
+                die("CPU is not a Ryzen 7 5800X3D; refusing to touch the SMU")
+        read32(DRV + "version")
+    except FileNotFoundError:
+        die("ryzen_smu driver not loaded (modprobe ryzen_smu)")
+    except PermissionError:
+        die("must run as root")
+    if len(OFFSETS) != 8 or any(not -30 <= o <= 0 for o in OFFSETS):
+        die("OFFSETS must be 8 values between -30 and 0")
+
+
+def main():
+    cmd = sys.argv[1] if len(sys.argv) > 1 else "list"
+    preflight()
+    if cmd == "apply":
+        for core, offset in enumerate(OFFSETS):
+            set_offset(core, offset)
+            readback = get_offset(core)
+            if readback != offset:
+                die(f"core {core}: wrote {offset}, read back {readback}")
+        print("pbo-curve: applied " + " ".join(f"{c}:{o}" for c, o in enumerate(OFFSETS)))
+    elif cmd == "list":
+        for core in range(len(OFFSETS)):
+            print(f"core {core}: {get_offset(core)}")
+    elif cmd == "reset":
+        smu(OP_RESET_ALL, 0)
+        print("pbo-curve: all offsets reset to 0")
+    else:
+        die("usage: pbo-curve [apply|list|reset]")
+
+
+if __name__ == "__main__":
+    main()

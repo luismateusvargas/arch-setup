@@ -1,0 +1,11 @@
+[Unit]
+Description=Apply per-core Curve Optimizer offsets (Ryzen 7 5800X3D)
+After=systemd-modules-load.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/modprobe ryzen_smu
+ExecStart=/usr/local/bin/pbo-curve apply
+
+[Install]
+WantedBy=multi-user.target

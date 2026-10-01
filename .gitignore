@@ -1,0 +1,6 @@
+# HWiNFO reports contain serial numbers and MAC addresses: never publish them.
+*.HTM
+*.htm
+
+*.bak.*
+__pycache__/

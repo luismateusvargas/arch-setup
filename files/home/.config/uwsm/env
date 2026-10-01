@@ -1,0 +1,11 @@
+export XCURSOR_SIZE=24
+# NVIDIA
+export LIBVA_DRIVER_NAME=nvidia
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+export NVD_BACKEND=direct
+# Keep NVIDIA's shader cache instead of pruning it at 1 GB (fewer re-compiles / stutters)
+export __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1
+# Toolkits: prefer Wayland, fall back to X11
+export ELECTRON_OZONE_PLATFORM_HINT=auto
+export QT_QPA_PLATFORM="wayland;xcb"
+export GDK_BACKEND="wayland,x11,*"

@@ -7,7 +7,7 @@ source "$REPO_DIR/config.sh"
 FILES="$REPO_DIR/files"
 
 [[ $EUID -eq 0 ]] || die "must run as root inside arch-chroot"
-[[ ! -d /run/archiso ]] || die "run install.sh, not this script, from the live ISO"
+# arch-chroot bind-mounts the live ISO's /run, including /run/archiso.
 
 pac() { pacman -S --needed --noconfirm "$@"; }
 
@@ -110,7 +110,7 @@ systemctl enable NetworkManager.service systemd-timesyncd.service \
 systemctl disable getty@tty2.service
 if getent group gamemode >/dev/null; then usermod -aG gamemode "$USERNAME"; fi
 
-step "Copying this repo to /home/$USERNAME/arch-setup for stage 2"
+step "Copying install assets to /home/$USERNAME/arch-setup for stage 2"
 rm -rf "/home/$USERNAME/arch-setup"
 cp -a "$REPO_DIR" "/home/$USERNAME/arch-setup"
 chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/arch-setup"

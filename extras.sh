@@ -15,9 +15,8 @@ cmd_hdd() {
     local disk
     disk=$(disk_by_model "$HDD_MODEL")
     [[ -n $disk ]] || die "no disk with model '$HDD_MODEL' found"
-    local mounted
-    mounted=$(findmnt -rno SOURCE)
-    if grep -q "^$disk" <<<"$mounted"; then die "$disk has mounted partitions"; fi
+    whole_disk "$disk" || die "$disk is not a whole disk"
+    disk_has_mounts "$disk" && die "$disk or one of its partitions is mounted"
     warn "about 49 000 power-on hours: bulk files or a second backup copy only"
     printf '\n%sEVERYTHING on %s (%s) will be erased.%s\n' "$c_red" "$disk" \
         "$(lsblk -dno MODEL,SIZE "$disk" | xargs)" "$c_off"

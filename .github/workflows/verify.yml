@@ -1,0 +1,26 @@
+name: Verify
+
+on: [push, pull_request]
+
+jobs:
+  scripts-and-guide:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install checks
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          python -m pip install 'markdown==3.10.2'
+      - name: Shell syntax and lint
+        run: |
+          bash -n *.sh scripts/*.sh tests/*.sh
+          shellcheck -x *.sh scripts/*.sh tests/*.sh
+      - name: Disk helper tests
+        run: bash tests/lib_test.sh
+      - name: Python syntax and generated guide
+        run: |
+          python -m py_compile tools/build_html.py files/usr/local/bin/pbo-curve
+          python -m unittest discover -s tests
+          python tools/build_html.py
+          git diff --exit-code -- arch_setup.html

@@ -79,4 +79,4 @@ Offsets live in [`files/usr/local/bin/pbo-curve`](files/usr/local/bin/pbo-curve)
 | `files/` | Every config file the scripts install, mirroring where it goes (`etc/`, `home/.config/`, `usr/local/bin/`) |
 | `tools/build_html.py` | Regenerates `arch_setup.html` from the guide (`pip install markdown`) |
 
-Every script stops at the first error and backs up any existing config before replacing it (`*.bak.<timestamp>`).
+Install scripts stop at the first error and back up any existing config before replacing it (`*.bak.<timestamp>`). `check.sh` reports all failed checks together.

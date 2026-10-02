@@ -2,13 +2,13 @@
 # Settings used by every script. Check these before running install.sh.
 # shellcheck disable=SC2034  # variables are read by the scripts that source this file
 
-USERNAME=luis
+USERNAME=htxzz77
 HOST_NAME=MINDEXTENSION
 TIMEZONE=America/Sao_Paulo
 LOCALES=(en_US.UTF-8 pt_BR.UTF-8)
 LANG_DEFAULT=en_US.UTF-8
-KEYMAP=us                  # console keymap (br-abnt2 for an ABNT2 keyboard)
-KB_LAYOUT=us               # Hyprland keyboard layout (br for ABNT2)
+KEYMAP=br-abnt2                  # console keymap (br-abnt2 for an ABNT2 keyboard)
+KB_LAYOUT=br               # Hyprland keyboard layout (br for ABNT2)
 MIRROR_COUNTRIES=BR,US     # reflector country codes
 
 # Disks are picked by model name so the wrong one can't be chosen by accident.

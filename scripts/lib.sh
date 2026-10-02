@@ -43,12 +43,29 @@ install_file() {
     "${run[@]}" install -Dm"$mode" "$src" "$dest"
 }
 
-# disk_by_model "MODEL" -> /dev/... of the first whole disk whose model contains MODEL
+# disk_by_model "MODEL" -> /dev/... only when exactly one whole disk matches
 disk_by_model() {
-    lsblk -dpno NAME,MODEL,TYPE | awk -v m="$1" '!found && $NF == "disk" && index($0, m) { print $1; found = 1 }'
+    lsblk -dpno NAME,MODEL,TYPE | awk -v m="$1" '
+        $NF == "disk" && index($0, m) { disk = $1; count++ }
+        END {
+            if (count == 1) print disk
+            if (count > 1) {
+                print "multiple disks match model " m > "/dev/stderr"
+                exit 2
+            }
+        }
+    '
 }
 
 # part <disk> <n> -> partition path (nvme0n1 -> nvme0n1p1, sda -> sda1)
 part() {
     if [[ $1 =~ [0-9]$ ]]; then echo "${1}p$2"; else echo "${1}$2"; fi
+}
+
+whole_disk() {
+    [[ $(lsblk -dnro TYPE "$1") == disk ]]
+}
+
+disk_has_mounts() {
+    [[ -n $(lsblk -nrpo MOUNTPOINTS "$1" | tr -d '[:space:]') ]]
 }

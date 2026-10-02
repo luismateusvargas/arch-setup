@@ -32,9 +32,9 @@ else
     read -r -p "Type the disk to install to (e.g. /dev/nvme0n1): " DISK
 fi
 [[ -b $DISK ]] || die "$DISK is not a block device"
+whole_disk "$DISK" || die "$DISK is not a whole disk"
 mountpoint -q /mnt && die "/mnt is already mounted: run 'umount -R /mnt' first"
-mounted_sources=$(findmnt -rno SOURCE)
-if grep -q "^$DISK" <<<"$mounted_sources"; then die "$DISK has mounted partitions"; fi
+disk_has_mounts "$DISK" && die "$DISK or one of its partitions is mounted"
 
 printf '\n%sEVERYTHING on %s (%s) will be erased.%s\n' "$c_red" "$DISK" \
     "$(lsblk -dno MODEL,SIZE "$DISK" | xargs)" "$c_off"
@@ -87,7 +87,11 @@ grep -v '^#' /mnt/etc/fstab | grep -v '^$' | sed 's/^/    /'
 
 step "Configuring the new system (arch-chroot)"
 rm -rf /mnt/root/arch-setup
-cp -a "$REPO_DIR" /mnt/root/arch-setup
+mkdir -p /mnt/root/arch-setup
+# Copy only install assets; the working directory may contain private reports.
+cp -a "$REPO_DIR"/{.gitattributes,.gitignore,README.md,arch_setup.md,arch_setup.html,\
+config.sh,install.sh,post-install.sh,undervolt.sh,check.sh,extras.sh,files,scripts,tools} \
+    /mnt/root/arch-setup/
 arch-chroot /mnt /bin/bash /root/arch-setup/scripts/chroot.sh
 
 step "Stage 1 complete"

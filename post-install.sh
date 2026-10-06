@@ -55,6 +55,7 @@ rm -f "$lua_tmp"
 step "Idle, lock, bar, session services (8.3)"
 install_file "$FILES/home/.config/hypr/hypridle.conf"  "$CFG/hypr/hypridle.conf"
 install_file "$FILES/home/.config/waybar/config.jsonc" "$CFG/waybar/config.jsonc"
+install_file "$FILES/home/.config/waybar/style.css"    "$CFG/waybar/style.css"
 install_file "$FILES/home/.config/waybar/scripts/cpu_voltage.sh" "$CFG/waybar/scripts/cpu_voltage.sh" 755
 install_file "$FILES/home/.config/waybar/scripts/gpu-stats.sh"   "$CFG/waybar/scripts/gpu-stats.sh"   755
 install_file "$FILES/home/.config/systemd/user/gpu-stats.service" "$CFG/systemd/user/gpu-stats.service"

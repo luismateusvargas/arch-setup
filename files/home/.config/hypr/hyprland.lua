@@ -42,8 +42,8 @@ end)
 ----------------------------------------------------------------------
 hl.config({
     general = {
-        gaps_in     = 5,
-        gaps_out    = 10,
+        gaps_in     = 2,   -- per window side: 4px between windows
+        gaps_out    = 2,
         border_size = 2,
         col = {
             active_border   = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
@@ -188,4 +188,12 @@ hl.window_rule({
     name     = "fix-xwayland-drags",
     match    = { class = "^$", title = "^$", xwayland = true, float = true, fullscreen = false, pin = false },
     no_focus = true,
+})
+
+-- Blur behind the waybar pills; ignore_alpha keeps the transparent gaps between them unblurred
+hl.layer_rule({
+    name         = "waybar-blur",
+    match        = { namespace = "^waybar$" },
+    blur         = true,
+    ignore_alpha = 0.1,
 })

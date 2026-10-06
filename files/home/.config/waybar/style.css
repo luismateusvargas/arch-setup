@@ -1,0 +1,104 @@
+/* Floating pills (2px from the screen edges, like gaps_out), rounding 10 like hyprland.lua,
+   active border gradient 33ccff -> 00ff99. Blur comes from the waybar layer rule. */
+
+/* Deep teal glass: teal-navy pills, cyan outline, ice-white text */
+@define-color bg        rgba(8, 32, 44, 0.80);
+@define-color bg-hover  rgba(51, 204, 255, 0.18);
+@define-color fg        #dff8ff;
+@define-color soft      #7fd6e8;
+@define-color muted     #5f8a96;
+@define-color dark      #062028;
+@define-color cyan      #33ccff;
+@define-color green     #00ff99;
+@define-color warning   #ffc65c;
+@define-color critical  #ff6b81;
+
+* {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 13px;
+    font-weight: 500;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    background: transparent;
+    color: @fg;
+}
+
+tooltip {
+    background: rgba(8, 32, 44, 0.95);
+    border: 1px solid alpha(@cyan, 0.5);
+    border-radius: 10px;
+}
+tooltip label { color: @fg; }
+
+/* Every module is its own pill */
+#workspaces,
+#clock,
+#tray,
+#pulseaudio,
+#cpu,
+#custom-cpu_voltage,
+#temperature,
+#memory,
+#custom-gpu,
+#network {
+    background: @bg;
+    border: 1px solid alpha(@cyan, 0.35);
+    border-radius: 10px;
+    padding: 0 12px;
+    margin: 0 3px;
+}
+
+.modules-left   > widget:first-child > #workspaces { margin-left: 0; }
+.modules-right  > widget:last-child  > *           { margin-right: 0; }
+
+/* Workspaces: active one gets the Hyprland border gradient */
+#workspaces { padding: 0 4px; }
+
+#workspaces button {
+    color: @soft;
+    background: transparent;
+    padding: 0 8px;
+    margin: 4px 2px;
+    border-radius: 7px;
+    box-shadow: none;
+    text-shadow: none;
+    transition: background 150ms ease;
+}
+#workspaces button:hover {
+    background: @bg-hover;
+    color: @fg;
+}
+#workspaces button.active {
+    background: linear-gradient(45deg, @cyan, @green);
+    color: @dark;
+    font-weight: 700;
+}
+#workspaces button.urgent {
+    background: @critical;
+    color: @dark;
+}
+
+#clock { font-weight: 700; }
+
+/* Metrics stay ice-white (icons cyan, set in config.jsonc) and only change color when busy or hot */
+#cpu.warning,
+#memory.warning,
+#temperature.warning,
+#custom-gpu.warning   { color: @warning; }
+
+#cpu.critical,
+#memory.critical,
+#temperature.critical,
+#custom-gpu.critical  { color: @critical; }
+
+#custom-cpu_voltage { color: @soft; }
+
+#pulseaudio.muted,
+#network.disconnected { color: @muted; }
+
+#tray > .passive        { -gtk-icon-effect: dim; }
+#tray > .needs-attention { -gtk-icon-effect: highlight; }

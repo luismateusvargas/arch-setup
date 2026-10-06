@@ -1,3 +1,6 @@
+# Notes about this specific machine (disk serials, UUIDs): kept local, see README.
+SETUP_NOTES.md
+
 # HWiNFO reports contain serial numbers and MAC addresses: never publish them.
 *.HTM
 *.htm

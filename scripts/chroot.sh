@@ -49,7 +49,11 @@ grep -q '^Architecture = auto' /etc/pacman.conf || die "CachyOS script did not s
 for repo in cachyos-v3 cachyos-core-v3 cachyos-extra-v3 cachyos multilib; do
     grep -q "^\[$repo\]" /etc/pacman.conf || die "[$repo] missing from /etc/pacman.conf"
 done
-pacman -Syu --noconfirm
+# The repo helper may leave cached sync databases behind when it changes mirrors.
+# Refresh them unconditionally before resolving packages from the new repos.
+pacman -Syyu --noconfirm
+pacman -Si linux-cachyos linux-cachyos-nvidia-open >/dev/null \
+    || die "CachyOS kernel packages are not visible after refreshing package databases"
 ok "repos: $(grep -oP '^\[\K[^]]+(?=\])' /etc/pacman.conf | grep -v options | xargs)"
 
 step "Boot chain: Limine + mkinitcpio, before the kernels (5.3)"

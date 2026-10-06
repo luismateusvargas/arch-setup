@@ -1,0 +1,11 @@
+[Unit]
+Description=NVIDIA GPU stats for waybar
+PartOf=waybar.service
+
+[Service]
+ExecStart=%h/.config/waybar/scripts/gpu-stats.sh
+ExecStopPost=/usr/bin/rm -f %t/waybar-gpu.json
+Restart=on-failure
+
+[Install]
+WantedBy=waybar.service

@@ -341,8 +341,8 @@ cd ~/arch-setup &amp;&amp; ./undervolt.sh install &amp;&amp; ./undervolt.sh test
 </tr>
 <tr>
 <td>Headset</td>
-<td>Logitech G PRO X, wired, through its USB DAC</td>
-<td>UAC device + HeadsetControl (sidetone).</td>
+<td>Logitech G PRO X, wired, through the motherboard's 3.5 mm jacks</td>
+<td>Appears as the onboard analog audio device; headset model is not reported.</td>
 </tr>
 <tr>
 <td>Mouse</td>
@@ -501,13 +501,14 @@ curl -LO https://mirror.cachyos.org/cachyos-repo.tar.xz
 tar xvf cachyos-repo.tar.xz &amp;&amp; cd cachyos-repo
 ./cachyos-repo.sh
 </code></pre></div>
-<p>The official script handles everything the repos need. It:
+<p>The official script handles the repo setup. It:
 - detects <code>x86-64-v3</code> on the 5800X3D;
 - imports the key <code>F3B607488DB35A47</code>;
 - installs the keyring, the mirrorlists and <strong>CachyOS's patched pacman</strong>;
 - sets <code>Architecture = auto</code>;
 - adds <code>[cachyos-v3]</code>, <code>[cachyos-core-v3]</code>, <code>[cachyos-extra-v3]</code> and <code>[cachyos]</code> above the Arch repos;
 - runs <code>pacman -Syu</code>.</p>
+<p>After the repo script changes mirrors, <code>scripts/chroot.sh</code> also runs <code>pacman -Syyu --noconfirm</code> once to force-refresh all package databases before the kernel transaction, then checks that the CachyOS kernel packages are visible. This guards against the stale database or mirror condition reported during the first installation. If <code>chroot.sh</code> still stops after partitioning, resolve the reported package error and resume from the live ISO with <code>arch-chroot /mnt /bin/bash /root/arch-setup/scripts/chroot.sh</code>; do not restart <code>install.sh</code>, which erases the NVMe.</p>
 <p>Do not hand-edit these repos into <code>pacman.conf</code>: stock pacman refuses <code>x86_64_v3</code> packages.</p>
 <p>Verify:</p>
 <div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">grep -E '^\[|^Architecture' /etc/pacman.conf
@@ -679,8 +680,8 @@ local SIDE = &quot;HDMI-A-1&quot;   -- SuperFrame Ace 27&quot; 1920x1080 @ 144 H
 
 -- vrr = 2: VRR only for fullscreen apps (avoids NVIDIA desktop flicker)
 -- vrr = 0 on HDMI: NVIDIA has no VRR over HDMI without HDMI 2.1 VRR
-hl.monitor({ output = MAIN, mode = &quot;2560x1080@144&quot;, position = &quot;0x0&quot;,    scale = 1, vrr = 2 })
-hl.monitor({ output = SIDE, mode = &quot;1920x1080@144&quot;, position = &quot;2560x0&quot;, scale = 1, vrr = 0 })
+hl.monitor({ output = SIDE, mode = &quot;1920x1080@144&quot;, position = &quot;0x0&quot;,    scale = 1, vrr = 0 })
+hl.monitor({ output = MAIN, mode = &quot;2560x1080@144&quot;, position = &quot;1920x0&quot;, scale = 1, vrr = 2 })
 hl.monitor({ output = &quot;&quot;,   mode = &quot;preferred&quot;,     position = &quot;auto&quot;,   scale = 1 })
 
 hl.workspace_rule({ workspace = &quot;1&quot;, monitor = MAIN, default = true })  -- games, editor
@@ -698,13 +699,14 @@ local menu        = &quot;rofi -show drun&quot;
 local function app(cmd) return hl.dsp.exec_cmd(&quot;uwsm app -- &quot; .. cmd) end
 
 ----------------------------------------------------------------------
--- Autostart   (waybar, swaync, hypridle, polkit agent run as user services, see 8.3)
+-- Autostart   (waybar, swaync, hypridle run as user services, see 8.3)
 ----------------------------------------------------------------------
 hl.on(&quot;hyprland.start&quot;, function()
+    hl.exec_cmd(&quot;systemctl --user start hyprpolkitagent.service&quot;)
     hl.exec_cmd(&quot;uwsm app -- awww-daemon&quot;)
     hl.exec_cmd(&quot;uwsm app -- wl-paste --watch cliphist store&quot;)
     hl.exec_cmd(&quot;uwsm app -- ckb-next --background&quot;)
-    hl.exec_cmd(&quot;sh -c 'sleep 1; awww img ~/Pictures/wallpaper.jpg'&quot;)
+    hl.exec_cmd(&quot;sh -c 'sleep 1; if [ -f \&quot;$HOME/Pictures/wallpaper.jpg\&quot; ]; then awww img \&quot;$HOME/Pictures/wallpaper.jpg\&quot;; else awww img /usr/share/hypr/wall0.png; fi'&quot;)
 end)
 
 ----------------------------------------------------------------------
@@ -754,6 +756,7 @@ hl.config({
     misc = {
         force_default_wallpaper = 0,
         disable_hyprland_logo   = true,
+        disable_splash_rendering = true,
         vrr                     = 0,    -- per-monitor vrr above takes over
     },
 
@@ -895,10 +898,11 @@ cat &gt; ~/.config/waybar/config.jsonc &lt;&lt;'EOF'
   &quot;height&quot;: 30,
   &quot;modules-left&quot;: [&quot;hyprland/workspaces&quot;],
   &quot;modules-center&quot;: [&quot;clock&quot;],
-  &quot;modules-right&quot;: [&quot;tray&quot;, &quot;pulseaudio&quot;, &quot;cpu&quot;, &quot;memory&quot;, &quot;network&quot;],
+  &quot;modules-right&quot;: [&quot;tray&quot;, &quot;pulseaudio&quot;, &quot;cpu&quot;, &quot;temperature&quot;, &quot;memory&quot;, &quot;network&quot;],
   &quot;clock&quot;: { &quot;format&quot;: &quot;{:%a %d %b  %H:%M}&quot; },
   &quot;pulseaudio&quot;: { &quot;format&quot;: &quot;{volume}% {icon}&quot;, &quot;format-icons&quot;: { &quot;default&quot;: [&quot;&quot;, &quot;&quot;, &quot;&quot;] }, &quot;on-click&quot;: &quot;pavucontrol&quot; },
-  &quot;cpu&quot;: { &quot;format&quot;: &quot;{usage}% &quot; },
+  &quot;cpu&quot;: { &quot;format&quot;: &quot;{usage}% {avg_frequency:.2f} GHz&quot; },
+  &quot;temperature&quot;: { &quot;hwmon-path-abs&quot;: &quot;/sys/devices/pci0000:00/0000:00:18.3/hwmon&quot;, &quot;input-filename&quot;: &quot;temp1_input&quot;, &quot;format&quot;: &quot;CPU {temperatureC}°C&quot; },
   &quot;memory&quot;: { &quot;format&quot;: &quot;{used:0.1f}G &quot; },
   &quot;network&quot;: { &quot;format-ethernet&quot;: &quot;{ipaddr} &quot;, &quot;format-disconnected&quot;: &quot;offline ⚠&quot; }
 }
@@ -906,10 +910,10 @@ EOF
 
 xdg-user-dirs-update
 </code></pre></div>
-<p>Put a wallpaper at <code>~/Pictures/wallpaper.jpg</code>, then log out (<code>SUPER+SHIFT+E</code>) and back in.</p>
+<p>The bundled Hyprland wallpaper is used until you put a custom image at <code>~/Pictures/wallpaper.jpg</code>. At the <code>ly</code> login, select <strong>Hyprland (uwsm-managed)</strong> so <code>graphical-session.target</code> starts Waybar and the other user services. For an existing installation, run <code>python3 repair-desktop.py</code> from this repository to preserve local monitor and keyboard settings while applying the wallpaper and Waybar fixes.</p>
 <hr />
 <h2 id="9-audio-pipewire-logitech-g-pro-x-wired" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="9-audio-pipewire-logitech-g-pro-x-wired"><span class="box"></span></label><span class="h-text">9. Audio: PipeWire + Logitech G PRO X (wired)</span></h2>
-<p>Wired through its USB DAC, the PRO X is a standard USB Audio Class device and works out of the box. Plugged into the 3.5 mm jack it's just analog via the ALC897, and HeadsetControl can't talk to it.</p>
+<p>The PRO X is connected through the motherboard's 3.5 mm analog jacks. PipeWire sees the onboard analog codec, not the headset model. Its output and microphone appear as separate analog sink and source nodes. HeadsetControl requires the USB DAC and cannot control sidetone on this analog connection.</p>
 <h3 id="91-lower-latency-fewer-resampling-cases" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="91-lower-latency-fewer-resampling-cases"><span class="box"></span></label><span class="h-text">9.1 Lower latency, fewer resampling cases</span></h3>
 <p>The default quantum is 1024/48000 (about 21 ms). 512 (about 10.7 ms) is a safe step down. Apps that ask for less, such as games and voice apps, can go as low as 64.</p>
 <div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">mkdir -p ~/.config/pipewire/pipewire.conf.d
@@ -925,20 +929,14 @@ EOF
 </code></pre></div>
 <p><code>allowed-rates</code> lets 44.1 kHz music play without resampling when the DAC supports it.</p>
 <h3 id="92-wireplumber-rules" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="92-wireplumber-rules"><span class="box"></span></label><span class="h-text">9.2 WirePlumber rules</span></h3>
-<p>These rules do two things:
-- <strong>Never suspend the PRO X.</strong> That removes the pop and the cut-off first syllable when sound starts.
-- <strong>Hide the NVIDIA HDMI/DP audio device</strong>, so the SuperFrame's HDMI audio never becomes the default output. Delete the second block if you ever want sound through the monitor.</p>
+<p>Hide the NVIDIA HDMI/DP audio device so the SuperFrame's HDMI audio does not become the default output. Remove this rule if you ever want sound through the monitor.</p>
 <div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash"># Check the real names first:
-pw-cli ls Node   | grep node.name    # look for alsa_output.usb-Logitech_PRO_X...
-pw-cli ls Device | grep device.name  # GPU audio is alsa_card.pci-0000_07_00.1 (bus 07 per HWiNFO)
+pw-cli ls Node   | grep node.name    # look for the onboard analog output and input
+pw-cli ls Device | grep device.name  # find the GPU audio card to hide
 
 mkdir -p ~/.config/wireplumber/wireplumber.conf.d
 cat &gt; ~/.config/wireplumber/wireplumber.conf.d/51-devices.conf &lt;&lt;'EOF'
 monitor.alsa.rules = [
-  {
-    matches = [ { node.name = &quot;~alsa_.*usb-Logitech_PRO_X.*&quot; } ]
-    actions = { update-props = { session.suspend-timeout-seconds = 0 } }
-  }
   {
     matches = [ { device.name = &quot;alsa_card.pci-0000_07_00.1&quot; } ]
     actions = { update-props = { device.disabled = true } }
@@ -948,7 +946,7 @@ EOF
 
 systemctl --user restart pipewire pipewire-pulse wireplumber
 pw-metadata -n settings | grep clock.quantum      # 512
-wpctl status                                      # PRO X present, NVIDIA HDMI gone
+wpctl status                                      # analog sink and source present, NVIDIA HDMI gone
 </code></pre></div>
 <h3 id="93-blue-voce-and-eq-replacement-easyeffects" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="93-blue-voce-and-eq-replacement-easyeffects"><span class="box"></span></label><span class="h-text">9.3 Blue VO!CE and EQ replacement: EasyEffects</span></h3>
 <ol>
@@ -962,7 +960,7 @@ wpctl status                                      # PRO X present, NVIDIA HDMI g
 </ol>
 <p>G HUB's DTS:X virtual 7.1 has no Linux equivalent.</p>
 <h3 id="94-sidetone-headsetcontrol" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="94-sidetone-headsetcontrol"><span class="box"></span></label><span class="h-text">9.4 Sidetone (HeadsetControl)</span></h3>
-<p><code>headsetcontrol</code> supports the G PRO X (USB ID <code>046d:0aaa</code>). The package installs udev rules, so no root is needed.</p>
+<p>If you switch to the PRO X USB DAC, <code>headsetcontrol</code> supports it (USB ID <code>046d:0aaa</code>). The package installs udev rules, so no root is needed. These commands do not apply to the 3.5 mm connection.</p>
 <div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">headsetcontrol -s 64      # sidetone 0–128
 headsetcontrol -?         # all supported features for your device
 </code></pre></div>
@@ -1169,16 +1167,13 @@ mangohud gamemoderun %command%          # with the FPS / frametime overlay
 <hr />
 <h2 id="13-optional" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="13-optional"><span class="box"></span></label><span class="h-text">13. Optional</span></h2>
 <h3 id="131-old-hdd-as-a-bulkbackup-disk" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="131-old-hdd-as-a-bulkbackup-disk"><span class="box"></span></label><span class="h-text">13.1 Old HDD as a bulk/backup disk</span></h3>
-<p>The Samsung HD502HJ has about 49 000 power-on hours. Use it for bulk files or a second copy of backups only, never as the only copy of anything. <code>smartd</code> (enabled in 5.7) watches its health.</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">lsblk -o NAME,MODEL,SIZE              # confirm it's SAMSUNG HD502HJ (expected /dev/sda); destroys D:
-sudo sgdisk -Z /dev/sda
-sudo sgdisk -n1:0:0 -t1:8300 /dev/sda
-sudo mkfs.ext4 -L HDD /dev/sda1
-sudo mkdir -p /mnt/hdd
-echo 'LABEL=HDD  /mnt/hdd  ext4  noatime,nofail,x-systemd.device-timeout=5s  0 2' | sudo tee -a /etc/fstab
-sudo systemctl daemon-reload &amp;&amp; sudo mount /mnt/hdd
-sudo chown &quot;$USER&quot;: /mnt/hdd
+<p>The Samsung HD502HJ has about 49 000 power-on hours. Its existing NTFS partition can be used as-is; changing it to ext4 requires erasing it after copying any files you want to keep. Use this old drive for bulk files or a second copy of backups only, never as the only copy of anything. <code>smartd</code> (enabled in 5.7) watches its health.</p>
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">findmnt -S /dev/sda1                       # verify the source and current mount point
+if findmnt -rn -S /dev/sda1 &gt;/dev/null; then sudo umount /dev/sda1; fi
+cd ~/arch-setup
+./extras.sh hdd  # ERASES the Samsung HDD and creates ext4; confirms disk model and path first
 </code></pre></div>
+<p>The script checks the Samsung's SATA connection and serial, mounts its new ext4 filesystem at <code>/mnt/hdd</code>, verifies the filesystem UUID, sets ownership, adds that UUID to <code>/etc/fstab</code> for future boots, and creates a Thunar sidebar bookmark. The current read-only NTFS mount is <code>/run/media/htxzz77/New Volume</code>; <code>/run/media</code> is a temporary file-manager mount location, not evidence of a USB source.</p>
 <h3 id="132-development-stack" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="132-development-stack"><span class="box"></span></label><span class="h-text">13.2 Development stack</span></h3>
 <div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">sudo pacman -S docker docker-compose docker-buildx
 sudo systemctl enable --now docker.socket
@@ -1237,7 +1232,7 @@ sudo pacman -S code                   # VS Code (OSS build, Open VSX extensions)
 <tr>
 <td>Audio</td>
 <td><code>wpctl status</code>; <code>pw-metadata -n settings</code></td>
-<td>PRO X default sink/source; quantum 512</td>
+<td>Onboard analog sink/source selected; quantum 512</td>
 </tr>
 <tr>
 <td>Snapshots</td>

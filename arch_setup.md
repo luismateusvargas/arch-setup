@@ -58,7 +58,7 @@ What still needs you: passwords, the CachyOS script's confirmations, reviewing t
 | Monitor 1 | LG UltraWide (GSM76FE) 2560×1080 @ 144 Hz, **DisplayPort** (its only DP input) | VRR 50–144 Hz. |
 | Monitor 2 | SuperFrame Ace 27" (SF-MN-ACE27FSIFD1B) 1920×1080 @ 144 Hz IPS, **HDMI** | Panel range 48–144 Hz. No VRR over HDMI on NVIDIA unless the monitor supports HDMI 2.1 VRR, so it's left off here. |
 | Audio | Realtek ALC897 (onboard), NVIDIA HDMI/DP audio | In-kernel. |
-| Headset | Logitech G PRO X, wired, through its USB DAC | UAC device + HeadsetControl (sidetone). |
+| Headset | Logitech G PRO X, wired, through the motherboard's 3.5 mm jacks | Appears as the onboard analog audio device; headset model is not reported. |
 | Mouse | Logitech G502 HERO | `piper` / `libratbag`. |
 | Keyboard | Corsair K95 RGB Platinum | `ckb-next`. |
 | Network | Realtek RTL8168/8111 Gigabit (wired only, no Wi-Fi/Bluetooth) | In-kernel `r8169`. |
@@ -200,13 +200,15 @@ tar xvf cachyos-repo.tar.xz && cd cachyos-repo
 ./cachyos-repo.sh
 ```
 
-The official script handles everything the repos need. It:
+The official script handles the repo setup. It:
 - detects `x86-64-v3` on the 5800X3D;
 - imports the key `F3B607488DB35A47`;
 - installs the keyring, the mirrorlists and **CachyOS's patched pacman**;
 - sets `Architecture = auto`;
 - adds `[cachyos-v3]`, `[cachyos-core-v3]`, `[cachyos-extra-v3]` and `[cachyos]` above the Arch repos;
 - runs `pacman -Syu`.
+
+After the repo script changes mirrors, `scripts/chroot.sh` also runs `pacman -Syyu --noconfirm` once to force-refresh all package databases before the kernel transaction, then checks that the CachyOS kernel packages are visible. This guards against the stale database or mirror condition reported during the first installation. If `chroot.sh` still stops after partitioning, resolve the reported package error and resume from the live ISO with `arch-chroot /mnt /bin/bash /root/arch-setup/scripts/chroot.sh`; do not restart `install.sh`, which erases the NVMe.
 
 Do not hand-edit these repos into `pacman.conf`: stock pacman refuses `x86_64_v3` packages.
 
@@ -436,8 +438,8 @@ local SIDE = "HDMI-A-1"   -- SuperFrame Ace 27" 1920x1080 @ 144 Hz, HDMI
 
 -- vrr = 2: VRR only for fullscreen apps (avoids NVIDIA desktop flicker)
 -- vrr = 0 on HDMI: NVIDIA has no VRR over HDMI without HDMI 2.1 VRR
-hl.monitor({ output = MAIN, mode = "2560x1080@144", position = "0x0",    scale = 1, vrr = 2 })
-hl.monitor({ output = SIDE, mode = "1920x1080@144", position = "2560x0", scale = 1, vrr = 0 })
+hl.monitor({ output = SIDE, mode = "1920x1080@144", position = "0x0",    scale = 1, vrr = 0 })
+hl.monitor({ output = MAIN, mode = "2560x1080@144", position = "1920x0", scale = 1, vrr = 2 })
 hl.monitor({ output = "",   mode = "preferred",     position = "auto",   scale = 1 })
 
 hl.workspace_rule({ workspace = "1", monitor = MAIN, default = true })  -- games, editor
@@ -455,13 +457,14 @@ local menu        = "rofi -show drun"
 local function app(cmd) return hl.dsp.exec_cmd("uwsm app -- " .. cmd) end
 
 ----------------------------------------------------------------------
--- Autostart   (waybar, swaync, hypridle, polkit agent run as user services, see 8.3)
+-- Autostart   (waybar, swaync, hypridle run as user services, see 8.3)
 ----------------------------------------------------------------------
 hl.on("hyprland.start", function()
+    hl.exec_cmd("systemctl --user start hyprpolkitagent.service")
     hl.exec_cmd("uwsm app -- awww-daemon")
     hl.exec_cmd("uwsm app -- wl-paste --watch cliphist store")
     hl.exec_cmd("uwsm app -- ckb-next --background")
-    hl.exec_cmd("sh -c 'sleep 1; awww img ~/Pictures/wallpaper.jpg'")
+    hl.exec_cmd("sh -c 'sleep 1; if [ -f \"$HOME/Pictures/wallpaper.jpg\" ]; then awww img \"$HOME/Pictures/wallpaper.jpg\"; else awww img /usr/share/hypr/wall0.png; fi'")
 end)
 
 ----------------------------------------------------------------------
@@ -511,6 +514,7 @@ hl.config({
     misc = {
         force_default_wallpaper = 0,
         disable_hyprland_logo   = true,
+        disable_splash_rendering = true,
         vrr                     = 0,    -- per-monitor vrr above takes over
     },
 
@@ -656,10 +660,11 @@ cat > ~/.config/waybar/config.jsonc <<'EOF'
   "height": 30,
   "modules-left": ["hyprland/workspaces"],
   "modules-center": ["clock"],
-  "modules-right": ["tray", "pulseaudio", "cpu", "memory", "network"],
+  "modules-right": ["tray", "pulseaudio", "cpu", "temperature", "memory", "network"],
   "clock": { "format": "{:%a %d %b  %H:%M}" },
   "pulseaudio": { "format": "{volume}% {icon}", "format-icons": { "default": ["", "", ""] }, "on-click": "pavucontrol" },
-  "cpu": { "format": "{usage}% " },
+  "cpu": { "format": "{usage}% {avg_frequency:.2f} GHz" },
+  "temperature": { "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon", "input-filename": "temp1_input", "format": "CPU {temperatureC}°C" },
   "memory": { "format": "{used:0.1f}G " },
   "network": { "format-ethernet": "{ipaddr} ", "format-disconnected": "offline ⚠" }
 }
@@ -668,13 +673,13 @@ EOF
 xdg-user-dirs-update
 ```
 
-Put a wallpaper at `~/Pictures/wallpaper.jpg`, then log out (`SUPER+SHIFT+E`) and back in.
+The bundled Hyprland wallpaper is used until you put a custom image at `~/Pictures/wallpaper.jpg`. At the `ly` login, select **Hyprland (uwsm-managed)** so `graphical-session.target` starts Waybar and the other user services. For an existing installation, run `python3 repair-desktop.py` from this repository to preserve local monitor and keyboard settings while applying the wallpaper and Waybar fixes.
 
 ---
 
 ## 9. Audio: PipeWire + Logitech G PRO X (wired)
 
-Wired through its USB DAC, the PRO X is a standard USB Audio Class device and works out of the box. Plugged into the 3.5 mm jack it's just analog via the ALC897, and HeadsetControl can't talk to it.
+The PRO X is connected through the motherboard's 3.5 mm analog jacks. PipeWire sees the onboard analog codec, not the headset model. Its output and microphone appear as separate analog sink and source nodes. HeadsetControl requires the USB DAC and cannot control sidetone on this analog connection.
 
 ### 9.1 Lower latency, fewer resampling cases
 
@@ -697,22 +702,16 @@ EOF
 
 ### 9.2 WirePlumber rules
 
-These rules do two things:
-- **Never suspend the PRO X.** That removes the pop and the cut-off first syllable when sound starts.
-- **Hide the NVIDIA HDMI/DP audio device**, so the SuperFrame's HDMI audio never becomes the default output. Delete the second block if you ever want sound through the monitor.
+Hide the NVIDIA HDMI/DP audio device so the SuperFrame's HDMI audio does not become the default output. Remove this rule if you ever want sound through the monitor.
 
 ```bash
 # Check the real names first:
-pw-cli ls Node   | grep node.name    # look for alsa_output.usb-Logitech_PRO_X...
-pw-cli ls Device | grep device.name  # GPU audio is alsa_card.pci-0000_07_00.1 (bus 07 per HWiNFO)
+pw-cli ls Node   | grep node.name    # look for the onboard analog output and input
+pw-cli ls Device | grep device.name  # find the GPU audio card to hide
 
 mkdir -p ~/.config/wireplumber/wireplumber.conf.d
 cat > ~/.config/wireplumber/wireplumber.conf.d/51-devices.conf <<'EOF'
 monitor.alsa.rules = [
-  {
-    matches = [ { node.name = "~alsa_.*usb-Logitech_PRO_X.*" } ]
-    actions = { update-props = { session.suspend-timeout-seconds = 0 } }
-  }
   {
     matches = [ { device.name = "alsa_card.pci-0000_07_00.1" } ]
     actions = { update-props = { device.disabled = true } }
@@ -722,7 +721,7 @@ EOF
 
 systemctl --user restart pipewire pipewire-pulse wireplumber
 pw-metadata -n settings | grep clock.quantum      # 512
-wpctl status                                      # PRO X present, NVIDIA HDMI gone
+wpctl status                                      # analog sink and source present, NVIDIA HDMI gone
 ```
 
 ### 9.3 Blue VO!CE and EQ replacement: EasyEffects
@@ -739,7 +738,7 @@ G HUB's DTS:X virtual 7.1 has no Linux equivalent.
 
 ### 9.4 Sidetone (HeadsetControl)
 
-`headsetcontrol` supports the G PRO X (USB ID `046d:0aaa`). The package installs udev rules, so no root is needed.
+If you switch to the PRO X USB DAC, `headsetcontrol` supports it (USB ID `046d:0aaa`). The package installs udev rules, so no root is needed. These commands do not apply to the 3.5 mm connection.
 
 ```bash
 headsetcontrol -s 64      # sidetone 0–128
@@ -988,18 +987,16 @@ Run it through Lutris (installed) with a GE-Proton runner. Once the game window 
 
 ### 13.1 Old HDD as a bulk/backup disk
 
-The Samsung HD502HJ has about 49 000 power-on hours. Use it for bulk files or a second copy of backups only, never as the only copy of anything. `smartd` (enabled in 5.7) watches its health.
+The Samsung HD502HJ has about 49 000 power-on hours. Its existing NTFS partition can be used as-is; changing it to ext4 requires erasing it after copying any files you want to keep. Use this old drive for bulk files or a second copy of backups only, never as the only copy of anything. `smartd` (enabled in 5.7) watches its health.
 
 ```bash
-lsblk -o NAME,MODEL,SIZE              # confirm it's SAMSUNG HD502HJ (expected /dev/sda); destroys D:
-sudo sgdisk -Z /dev/sda
-sudo sgdisk -n1:0:0 -t1:8300 /dev/sda
-sudo mkfs.ext4 -L HDD /dev/sda1
-sudo mkdir -p /mnt/hdd
-echo 'LABEL=HDD  /mnt/hdd  ext4  noatime,nofail,x-systemd.device-timeout=5s  0 2' | sudo tee -a /etc/fstab
-sudo systemctl daemon-reload && sudo mount /mnt/hdd
-sudo chown "$USER": /mnt/hdd
+findmnt -S /dev/sda1                       # verify the source and current mount point
+if findmnt -rn -S /dev/sda1 >/dev/null; then sudo umount /dev/sda1; fi
+cd ~/arch-setup
+./extras.sh hdd  # ERASES the Samsung HDD and creates ext4; confirms disk model and path first
 ```
+
+The script checks the Samsung's SATA connection and serial, mounts its new ext4 filesystem at `/mnt/hdd`, verifies the filesystem UUID, sets ownership, adds that UUID to `/etc/fstab` for future boots, and creates a Thunar sidebar bookmark. The current read-only NTFS mount is `/run/media/htxzz77/New Volume`; `/run/media` is a temporary file-manager mount location, not evidence of a USB source.
 
 ### 13.2 Development stack
 
@@ -1027,7 +1024,7 @@ Docker's data lives on the `@docker` subvolume, so it stays out of system snapsh
 | Curve Optimizer | `sudo pbo-curve list` | -27 -29 -29 -30 -28 -30 -27 -28 |
 | zram | `zramctl`; `swapon --show` | zram0, zstd |
 | Monitors | `hyprctl monitors` | DP-x 2560x1080@144 (VRR), HDMI-A-1 1920x1080@144 |
-| Audio | `wpctl status`; `pw-metadata -n settings` | PRO X default sink/source; quantum 512 |
+| Audio | `wpctl status`; `pw-metadata -n settings` | Onboard analog sink/source selected; quantum 512 |
 | Snapshots | `snapper -c root list`; `limine-list` | "fresh install" + Snapshots menu |
 | Fallback kernel | Limine menu | linux-cachyos-lts boots |
 | Services | `systemctl --failed`; `systemctl --user --failed` | none |

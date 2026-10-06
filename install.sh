@@ -90,9 +90,12 @@ rm -rf /mnt/root/arch-setup
 mkdir -p /mnt/root/arch-setup
 # Copy only install assets; the working directory may contain private reports.
 cp -a "$REPO_DIR"/{.gitattributes,.gitignore,README.md,arch_setup.md,arch_setup.html,\
-config.sh,install.sh,post-install.sh,undervolt.sh,check.sh,extras.sh,files,scripts,tools} \
+config.sh,install.sh,post-install.sh,repair-desktop.py,undervolt.sh,check.sh,extras.sh,files,scripts,tools} \
     /mnt/root/arch-setup/
-arch-chroot /mnt /bin/bash /root/arch-setup/scripts/chroot.sh
+if ! arch-chroot /mnt /bin/bash /root/arch-setup/scripts/chroot.sh; then
+    warn "The NVMe is already partitioned; do not rerun install.sh or it will erase it again."
+    die "Resolve the error, then resume with: arch-chroot /mnt /bin/bash /root/arch-setup/scripts/chroot.sh"
+fi
 
 step "Stage 1 complete"
 info "Next: reboot, pick 'linux-cachyos' in Limine, log in with session 'Hyprland (uwsm-managed)',"

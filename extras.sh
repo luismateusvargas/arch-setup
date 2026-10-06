@@ -11,12 +11,19 @@ source "$REPO_DIR/config.sh"
 
 cmd_hdd() {
     step "Bulk HDD ($HDD_MODEL)"
+    [[ -n ${HDD_SERIAL:-} ]] || die "HDD_SERIAL is not set in config.sh (see README: Machine-specific values)"
     lsblk -dpo NAME,MODEL,SIZE,TYPE | grep -E 'NAME|disk'
     local disk
     disk=$(disk_by_model "$HDD_MODEL")
     [[ -n $disk ]] || die "no disk with model '$HDD_MODEL' found"
+    [[ -b $disk ]] || die "$disk is not a block device"
     whole_disk "$disk" || die "$disk is not a whole disk"
-    disk_has_mounts "$disk" && die "$disk or one of its partitions is mounted"
+    [[ $(lsblk -dnro TRAN "$disk") == sata ]] || die "$disk is not connected by SATA"
+    [[ $(lsblk -dnro SERIAL "$disk") == "$HDD_SERIAL" ]] || die "$disk serial does not match $HDD_SERIAL"
+    disk_has_mounts "$disk" && die "$disk or one of its partitions is mounted; unmount it before formatting"
+    if grep -Eq '[[:space:]]/mnt/hdd[[:space:]]' /etc/fstab; then
+        die "/mnt/hdd already has an fstab entry; inspect it before formatting"
+    fi
     warn "about 49 000 power-on hours: bulk files or a second backup copy only"
     printf '\n%sEVERYTHING on %s (%s) will be erased.%s\n' "$c_red" "$disk" \
         "$(lsblk -dno MODEL,SIZE "$disk" | xargs)" "$c_off"
@@ -28,15 +35,25 @@ cmd_hdd() {
     sudo sgdisk -n1:0:0 -t1:8300 "$disk"
     sudo partprobe "$disk"
     sudo udevadm settle
-    sudo mkfs.ext4 -F -L HDD "$(part "$disk" 1)"
+    local hdd_part hdd_uuid
+    hdd_part=$(part "$disk" 1)
+    sudo mkfs.ext4 -F -L HDD "$hdd_part"
+    hdd_uuid=$(sudo blkid -s UUID -o value "$hdd_part")
+    [[ -n $hdd_uuid ]] || die "could not read the new ext4 filesystem UUID"
     sudo mkdir -p /mnt/hdd
-    if ! grep -q '^LABEL=HDD ' /etc/fstab; then
-        echo 'LABEL=HDD  /mnt/hdd  ext4  noatime,nofail,x-systemd.device-timeout=5s  0 2' | sudo tee -a /etc/fstab >/dev/null
-    fi
+    printf 'UUID=%s  /mnt/hdd  ext4  noatime,nofail,x-systemd.device-timeout=5s  0 2\n' "$hdd_uuid" \
+        | sudo tee -a /etc/fstab >/dev/null
     sudo systemctl daemon-reload
     sudo mount /mnt/hdd
+    [[ $(findmnt -n -o UUID -T /mnt/hdd) == "$hdd_uuid" ]] \
+        || die "/mnt/hdd is not mounted from the expected Samsung HDD filesystem"
     sudo chown "$USER": /mnt/hdd
-    ok "mounted at /mnt/hdd; smartd watches its health"
+    local bookmarks="$HOME/.config/gtk-3.0/bookmarks"
+    mkdir -p "${bookmarks%/*}"
+    if ! grep -Eq '^file:///mnt/hdd([[:space:]]|$)' "$bookmarks" 2>/dev/null; then
+        printf 'file:///mnt/hdd HDD\n' >> "$bookmarks"
+    fi
+    ok "mounted at /mnt/hdd and added to Thunar bookmarks; smartd watches its health"
 }
 
 cmd_dev() {

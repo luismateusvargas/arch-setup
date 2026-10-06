@@ -55,12 +55,17 @@ rm -f "$lua_tmp"
 step "Idle, lock, bar, session services (8.3)"
 install_file "$FILES/home/.config/hypr/hypridle.conf"  "$CFG/hypr/hypridle.conf"
 install_file "$FILES/home/.config/waybar/config.jsonc" "$CFG/waybar/config.jsonc"
+install_file "$FILES/home/.config/waybar/scripts/cpu_voltage.sh" "$CFG/waybar/scripts/cpu_voltage.sh" 755
+install_file "$FILES/home/.config/waybar/scripts/gpu-stats.sh"   "$CFG/waybar/scripts/gpu-stats.sh"   755
+install_file "$FILES/home/.config/systemd/user/gpu-stats.service" "$CFG/systemd/user/gpu-stats.service"
+systemctl --user daemon-reload
+systemctl --user enable gpu-stats.service
 [[ -e $CFG/hypr/hyprlock.conf ]] || install -Dm644 /usr/share/hypr/hyprlock.conf "$CFG/hypr/hyprlock.conf"
 systemctl --user add-wants graphical-session.target \
     waybar.service swaync.service hypridle.service hyprpolkitagent.service
 xdg-user-dirs-update
 mkdir -p "$HOME/Pictures"
-[[ -e $HOME/Pictures/wallpaper.jpg ]] || warn "put a wallpaper at ~/Pictures/wallpaper.jpg"
+[[ -e $HOME/Pictures/wallpaper.jpg ]] || info "No custom wallpaper at ~/Pictures/wallpaper.jpg; using Hyprland's bundled wallpaper"
 
 step "PipeWire + WirePlumber (9.1, 9.2)"
 install_file "$FILES/home/.config/pipewire/pipewire.conf.d/10-latency.conf" \
@@ -87,6 +92,6 @@ fi
 
 step "Stage 2 complete"
 info "Log out (SUPER+SHIFT+E) and back in so waybar, swaync, hypridle and the polkit agent start."
-info "Then: EasyEffects setup (guide 9.3), sidetone: headsetcontrol -s 64,"
+info "Then: EasyEffects setup (guide 9.3); check the analog audio defaults with wpctl (guide 9.2),"
 info "      undervolt: ./undervolt.sh install, ./undervolt.sh test, ./undervolt.sh enable"
 info "      verify everything: ./check.sh"

@@ -8,8 +8,8 @@ local SIDE = "HDMI-A-1"   -- SuperFrame Ace 27" 1920x1080 @ 144 Hz, HDMI
 
 -- vrr = 2: VRR only for fullscreen apps (avoids NVIDIA desktop flicker)
 -- vrr = 0 on HDMI: NVIDIA has no VRR over HDMI without HDMI 2.1 VRR
-hl.monitor({ output = MAIN, mode = "2560x1080@144", position = "0x0",    scale = 1, vrr = 2 })
-hl.monitor({ output = SIDE, mode = "1920x1080@144", position = "2560x0", scale = 1, vrr = 0 })
+hl.monitor({ output = SIDE, mode = "1920x1080@144", position = "0x0",    scale = 1, vrr = 0 })
+hl.monitor({ output = MAIN, mode = "2560x1080@144", position = "1920x0", scale = 1, vrr = 2 })
 hl.monitor({ output = "",   mode = "preferred",     position = "auto",   scale = 1 })
 
 hl.workspace_rule({ workspace = "1", monitor = MAIN, default = true })  -- games, editor
@@ -27,13 +27,14 @@ local menu        = "rofi -show drun"
 local function app(cmd) return hl.dsp.exec_cmd("uwsm app -- " .. cmd) end
 
 ----------------------------------------------------------------------
--- Autostart   (waybar, swaync, hypridle, polkit agent run as user services, see 8.3)
+-- Autostart   (waybar, swaync, hypridle run as user services, see 8.3)
 ----------------------------------------------------------------------
 hl.on("hyprland.start", function()
+    hl.exec_cmd("systemctl --user start hyprpolkitagent.service")
     hl.exec_cmd("uwsm app -- awww-daemon")
     hl.exec_cmd("uwsm app -- wl-paste --watch cliphist store")
     hl.exec_cmd("uwsm app -- ckb-next --background")
-    hl.exec_cmd("sh -c 'sleep 1; awww img ~/Pictures/wallpaper.jpg'")
+    hl.exec_cmd("sh -c 'sleep 1; if [ -f \"$HOME/Pictures/wallpaper.jpg\" ]; then awww img \"$HOME/Pictures/wallpaper.jpg\"; else awww img /usr/share/hypr/wall0.png; fi'")
 end)
 
 ----------------------------------------------------------------------
@@ -83,6 +84,7 @@ hl.config({
     misc = {
         force_default_wallpaper = 0,
         disable_hyprland_logo   = true,
+        disable_splash_rendering = true,
         vrr                     = 0,    -- per-monitor vrr above takes over
     },
 

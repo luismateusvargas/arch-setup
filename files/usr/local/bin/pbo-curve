@@ -10,7 +10,8 @@ import sys
 import time
 
 # Core 0..7, same order and values as PBO2 Tuner on Windows (all negative).
-OFFSETS = [-27, -29, -29, -30, -28, -30, -27, -28]
+# undervolt.sh install fills this in from CO_OFFSETS in config.sh.
+OFFSETS = []
 
 DRV = "/sys/kernel/ryzen_smu_drv/"
 SMU_ARGS = DRV + "smu_args"
@@ -78,7 +79,7 @@ def preflight():
     except PermissionError:
         die("must run as root")
     if len(OFFSETS) != 8 or any(not -30 <= o <= 0 for o in OFFSETS):
-        die("OFFSETS must be 8 values between -30 and 0")
+        die("OFFSETS must be 8 values between -30 and 0 (set CO_OFFSETS in config.sh, then: undervolt.sh install)")
 
 
 def main():

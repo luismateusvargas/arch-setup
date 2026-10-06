@@ -1,0 +1,6 @@
+# NVIDIA (appended to ~/.config/uwsm/env by post-install.sh when GPU_DRIVER is nvidia-*)
+export LIBVA_DRIVER_NAME=nvidia
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+export NVD_BACKEND=direct
+# Keep NVIDIA's shader cache instead of pruning it at 1 GB (fewer re-compiles / stutters)
+export __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1

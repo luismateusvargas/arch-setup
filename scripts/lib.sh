@@ -13,7 +13,8 @@ step() { printf '\n%s==> %s%s\n' "$c_blue" "$*" "$c_off"; }
 info() { printf '    %s\n' "$*"; }
 ok()   { printf '%s  ✓ %s%s\n' "$c_green" "$*" "$c_off"; }
 warn() { printf '%s  ! %s%s\n' "$c_yellow" "$*" "$c_off" >&2; }
-die()  { printf '%s  ✗ %s%s\n' "$c_red" "$*" "$c_off" >&2; exit 1; }
+err()  { printf '%s  ✗ %s%s\n' "$c_red" "$*" "$c_off" >&2; }
+die()  { err "$*"; exit 1; }
 
 on_error() {
     local code=$?
@@ -22,6 +23,22 @@ on_error() {
     exit "$code"
 }
 trap on_error ERR
+
+# load_config <repo dir>
+# Sources config.sh, then config.local.sh (git-ignored personal overrides) when present.
+# Files edited on Windows may have CRLF line endings, which bash can't source: strip them.
+load_config() {
+    local f
+    for f in "$1/config.sh" "$1/config.local.sh"; do
+        [[ -f $f ]] || continue
+        if grep -q $'\r' "$f"; then
+            sed -i 's/\r$//' "$f"
+            warn "$(basename "$f") had Windows (CRLF) line endings; converted to LF"
+        fi
+        # shellcheck source=/dev/null
+        source "$f"
+    done
+}
 
 # confirm "question" -> success only on y/yes
 confirm() {

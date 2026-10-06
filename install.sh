@@ -1,36 +1,36 @@
 #!/usr/bin/env bash
 # Stage 1: run from the Arch Linux live ISO, as root.
-# Wipes the install NVMe, creates the btrfs layout, installs the base system,
+# Wipes the install disk, creates the btrfs layout, installs the base system,
 # then configures it inside arch-chroot (scripts/chroot.sh). Guide sections 3-5.
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$REPO_DIR/scripts/lib.sh"
-source "$REPO_DIR/config.sh"
+source "$REPO_DIR/scripts/hw.sh"
+load_config "$REPO_DIR"
 
 [[ $EUID -eq 0 ]] || die "run as root: bash install.sh"
 [[ -d /run/archiso ]] || die "this must run from the Arch Linux live ISO"
 [[ $(cat /sys/firmware/efi/fw_platform_size 2>/dev/null) == 64 ]] \
     || die "not booted in 64-bit UEFI mode (disable CSM, boot the USB's UEFI entry)"
 
-step "Settings (config.sh)"
+step "Checking config.sh against this machine"
+validate_config hardware || die "fix config.sh (details above; bash check-config.sh shows the detected values)"
 info "user: $USERNAME   host: $HOST_NAME   timezone: $TIMEZONE"
 info "keymap: $KEYMAP   locales: ${LOCALES[*]}   mirrors: $MIRROR_COUNTRIES"
+info "cpu: $CPU_VENDOR   gpu driver: $GPU_DRIVER   kernel: $KERNEL (fallback $FALLBACK_KERNEL)"
 confirm "Are these correct?" || die "edit config.sh, then run install.sh again"
 
 step "Network and clock"
-ping -c 1 -W 5 archlinux.org >/dev/null || die "no network: plug in Ethernet"
+ping -c 1 -W 5 archlinux.org >/dev/null \
+    || die "no network: plug in Ethernet, or connect Wi-Fi with iwctl (guide section 3)"
 timedatectl set-ntp true
 ok "online"
 
-step "Install disk"
+step "Install disk ($INSTALL_DISK_MODEL)"
 lsblk -dpo NAME,MODEL,SIZE,TYPE | grep -E 'NAME|disk'
 DISK=$(disk_by_model "$INSTALL_DISK_MODEL")
-if [[ -n $DISK ]]; then
-    info "found $INSTALL_DISK_MODEL at $DISK"
-else
-    warn "no disk with model '$INSTALL_DISK_MODEL' found"
-    read -r -p "Type the disk to install to (e.g. /dev/nvme0n1): " DISK
-fi
+[[ -n $DISK ]] || die "no disk with model '$INSTALL_DISK_MODEL' found"
+info "found $INSTALL_DISK_MODEL at $DISK"
 [[ -b $DISK ]] || die "$DISK is not a block device"
 whole_disk "$DISK" || die "$DISK is not a whole disk"
 mountpoint -q /mnt && die "/mnt is already mounted: run 'umount -R /mnt' first"
@@ -75,7 +75,7 @@ reflector --country "$MIRROR_COUNTRIES" --protocol https --latest 15 --sort rate
     --save /etc/pacman.d/mirrorlist || warn "reflector failed; keeping the ISO's mirrorlist"
 
 step "Base system (pacstrap)"
-pacstrap -K /mnt base base-devel linux-firmware amd-ucode btrfs-progs dosfstools efibootmgr \
+pacstrap -K /mnt base base-devel linux-firmware "$(cpu_ucode)" btrfs-progs dosfstools efibootmgr pciutils \
                  networkmanager sudo git neovim nano man-db man-pages bash-completion \
                  pacman-contrib reflector smartmontools zram-generator python
 
@@ -90,15 +90,16 @@ rm -rf /mnt/root/arch-setup
 mkdir -p /mnt/root/arch-setup
 # Copy only install assets; the working directory may contain private reports.
 cp -a "$REPO_DIR"/{.gitattributes,.gitignore,README.md,arch_setup.md,arch_setup.html,\
-config.sh,install.sh,post-install.sh,repair-desktop.py,undervolt.sh,check.sh,extras.sh,files,scripts,tools} \
+config.sh,install.sh,check-config.sh,post-install.sh,repair-desktop.py,undervolt.sh,check.sh,extras.sh,files,scripts,tools} \
     /mnt/root/arch-setup/
+[[ -f $REPO_DIR/config.local.sh ]] && cp -a "$REPO_DIR/config.local.sh" /mnt/root/arch-setup/
 if ! arch-chroot /mnt /bin/bash /root/arch-setup/scripts/chroot.sh; then
-    warn "The NVMe is already partitioned; do not rerun install.sh or it will erase it again."
+    warn "$DISK is already partitioned; do not rerun install.sh or it will erase it again."
     die "Resolve the error, then resume with: arch-chroot /mnt /bin/bash /root/arch-setup/scripts/chroot.sh"
 fi
 
 step "Stage 1 complete"
-info "Next: reboot, pick 'linux-cachyos' in Limine, log in with session 'Hyprland (uwsm-managed)',"
+info "Next: reboot, pick '$KERNEL' in Limine, log in with session 'Hyprland (uwsm-managed)',"
 info "open a terminal (SUPER+Q on the first-start config) and run:  ~/arch-setup/post-install.sh"
 if confirm "Unmount and reboot now? (remove the USB stick when the screen goes dark)"; then
     umount -R /mnt

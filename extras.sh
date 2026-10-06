@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 # Optional extras (guide section 13). Run as your normal user.
-#   ./extras.sh hdd   format the old Samsung HDD as ext4 and mount it at /mnt/hdd (ERASES it)
+#   ./extras.sh hdd   format HDD_MODEL (config.sh) as ext4 and mount it at /mnt/hdd (ERASES it)
 #   ./extras.sh dev   Docker + VS Code
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$REPO_DIR/scripts/lib.sh"
-source "$REPO_DIR/config.sh"
+load_config "$REPO_DIR"
 
 [[ $EUID -ne 0 ]] || die "run as your normal user, not root or sudo"
 
 cmd_hdd() {
+    [[ -n ${HDD_MODEL:-} ]] || die "HDD_MODEL is not set in config.sh"
     step "Bulk HDD ($HDD_MODEL)"
-    [[ -n ${HDD_SERIAL:-} ]] || die "HDD_SERIAL is not set in config.sh (see README: Machine-specific values)"
+    [[ -n ${HDD_SERIAL:-} ]] || die "HDD_SERIAL is not set in config.sh (see config.sh section 5)"
     lsblk -dpo NAME,MODEL,SIZE,TYPE | grep -E 'NAME|disk'
     local disk
     disk=$(disk_by_model "$HDD_MODEL")
@@ -24,7 +25,10 @@ cmd_hdd() {
     if grep -Eq '[[:space:]]/mnt/hdd[[:space:]]' /etc/fstab; then
         die "/mnt/hdd already has an fstab entry; inspect it before formatting"
     fi
-    warn "about 49 000 power-on hours: bulk files or a second backup copy only"
+    local hours
+    hours=$(sudo smartctl -A "$disk" | awk '/Power_On_Hours/ { print $10 }')
+    info "power-on hours (SMART): ${hours:-unknown}"
+    [[ ${hours:-0} -gt 30000 ]] && warn "an old disk: use it for bulk files or a second backup copy only"
     printf '\n%sEVERYTHING on %s (%s) will be erased.%s\n' "$c_red" "$disk" \
         "$(lsblk -dno MODEL,SIZE "$disk" | xargs)" "$c_off"
     local again
@@ -46,7 +50,7 @@ cmd_hdd() {
     sudo systemctl daemon-reload
     sudo mount /mnt/hdd
     [[ $(findmnt -n -o UUID -T /mnt/hdd) == "$hdd_uuid" ]] \
-        || die "/mnt/hdd is not mounted from the expected Samsung HDD filesystem"
+        || die "/mnt/hdd is not mounted from the new filesystem on $disk"
     sudo chown "$USER": /mnt/hdd
     local bookmarks="$HOME/.config/gtk-3.0/bookmarks"
     mkdir -p "${bookmarks%/*}"

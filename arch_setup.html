@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Arch Setup Guide</title>
-<meta name="description" content="Arch Linux: Gaming &amp; Coding Workstation — MINDEXTENSION">
+<meta name="description" content="Arch Linux + CachyOS: Gaming &amp; Coding Workstation (moving from Windows)">
 <style>
 :root {
   --bg: #f7f7f5;
@@ -215,7 +215,7 @@ blockquote p:last-child { margin-bottom: 0; }
 <body>
 <header class="topbar">
   <button type="button" class="menu-btn" aria-label="Toggle contents">☰</button>
-  <h1>Arch Linux: Gaming &amp; Coding Workstation — MINDEXTENSION</h1>
+  <h1>Arch Linux + CachyOS: Gaming &amp; Coding Workstation (moving from Windows)</h1>
   <div class="progress" aria-live="polite">
     <div class="progress-track"><div class="progress-fill"></div></div>
     <span class="progress-label">0 / 0 done</span>
@@ -224,24 +224,35 @@ blockquote p:last-child { margin-bottom: 0; }
   <button type="button" class="reset-btn" title="Clear all checkmarks">Reset</button>
 </header>
 <div class="layout">
-  <nav class="toc" aria-label="Contents"><ol><li><a href="#scripted-install" data-target="scripted-install">Scripted install</a></li><li><a href="#0-hardware-from-hwinfo-2026-10-01" data-target="0-hardware-from-hwinfo-2026-10-01">0. Hardware (from HWiNFO, 2026-10-01)</a></li><li><a href="#1-before-you-wipe-windows" data-target="1-before-you-wipe-windows">1. Before you wipe Windows</a></li><li><a href="#2-bios-settings-f67d" data-target="2-bios-settings-f67d">2. BIOS settings (F67d)</a></li><li><a href="#3-live-usb-disks" data-target="3-live-usb-disks">3. Live USB: disks</a></li><li><a href="#4-base-install" data-target="4-base-install">4. Base install</a></li><li><a href="#5-inside-the-chroot" data-target="5-inside-the-chroot">5. Inside the chroot</a><ol><li><a href="#51-system-basics" data-target="51-system-basics">5.1 System basics</a></li><li><a href="#52-pacman-multilib-cachyos-repositories" data-target="52-pacman-multilib-cachyos-repositories">5.2 pacman: multilib + CachyOS repositories</a></li><li><a href="#53-boot-chain-limine-mkinitcpio-install-before-the-kernels" data-target="53-boot-chain-limine-mkinitcpio-install-before-the-kernels">5.3 Boot chain: Limine + mkinitcpio (install BEFORE the kernels)</a></li><li><a href="#54-kernels-nvidia" data-target="54-kernels-nvidia">5.4 Kernels + NVIDIA</a></li><li><a href="#55-desktop-audio-gaming-peripherals" data-target="55-desktop-audio-gaming-peripherals">5.5 Desktop, audio, gaming, peripherals</a></li><li><a href="#56-memory-zram-sysctl" data-target="56-memory-zram-sysctl">5.6 Memory: zram + sysctl</a></li><li><a href="#57-services-scheduler-mirrors" data-target="57-services-scheduler-mirrors">5.7 Services, scheduler, mirrors</a></li><li><a href="#58-leave-and-reboot" data-target="58-leave-and-reboot">5.8 Leave and reboot</a></li></ol></li><li><a href="#6-first-boot-quick-checks" data-target="6-first-boot-quick-checks">6. First boot: quick checks</a></li><li><a href="#7-bootable-snapshots-snapper-limine" data-target="7-bootable-snapshots-snapper-limine">7. Bootable snapshots (snapper + Limine)</a></li><li><a href="#8-hyprland" data-target="8-hyprland">8. Hyprland</a><ol><li><a href="#81-session-environment-configuwsmenv" data-target="81-session-environment-configuwsmenv">8.1 Session environment (~/.config/uwsm/env)</a></li><li><a href="#82-confighyprhyprlandlua" data-target="82-confighyprhyprlandlua">8.2 ~/.config/hypr/hyprland.lua</a></li><li><a href="#83-session-services-idle-lock-bar" data-target="83-session-services-idle-lock-bar">8.3 Session services, idle, lock, bar</a></li></ol></li><li><a href="#9-audio-pipewire-logitech-g-pro-x-wired" data-target="9-audio-pipewire-logitech-g-pro-x-wired">9. Audio: PipeWire + Logitech G PRO X (wired)</a><ol><li><a href="#91-lower-latency-fewer-resampling-cases" data-target="91-lower-latency-fewer-resampling-cases">9.1 Lower latency, fewer resampling cases</a></li><li><a href="#92-wireplumber-rules" data-target="92-wireplumber-rules">9.2 WirePlumber rules</a></li><li><a href="#93-blue-voce-and-eq-replacement-easyeffects" data-target="93-blue-voce-and-eq-replacement-easyeffects">9.3 Blue VO!CE and EQ replacement: EasyEffects</a></li><li><a href="#94-sidetone-headsetcontrol" data-target="94-sidetone-headsetcontrol">9.4 Sidetone (HeadsetControl)</a></li></ol></li><li><a href="#10-mouse-keyboard" data-target="10-mouse-keyboard">10. Mouse &amp; keyboard</a></li><li><a href="#11-per-core-curve-optimizer-systemd-service" data-target="11-per-core-curve-optimizer-systemd-service">11. Per-core Curve Optimizer (systemd service)</a><ol><li><a href="#111-driver-aur" data-target="111-driver-aur">11.1 Driver (AUR)</a></li><li><a href="#112-usrlocalbinpbo-curve" data-target="112-usrlocalbinpbo-curve">11.2 /usr/local/bin/pbo-curve</a></li><li><a href="#113-test-by-hand-first" data-target="113-test-by-hand-first">11.3 Test by hand first</a></li><li><a href="#114-apply-at-boot-and-after-resume" data-target="114-apply-at-boot-and-after-resume">11.4 Apply at boot and after resume</a></li></ol></li><li><a href="#12-gaming" data-target="12-gaming">12. Gaming</a><ol><li><a href="#121-steam" data-target="121-steam">12.1 Steam</a></li><li><a href="#122-black-desert-standalone-launcher" data-target="122-black-desert-standalone-launcher">12.2 Black Desert (standalone launcher)</a></li></ol></li><li><a href="#13-optional" data-target="13-optional">13. Optional</a><ol><li><a href="#131-old-hdd-as-a-bulkbackup-disk" data-target="131-old-hdd-as-a-bulkbackup-disk">13.1 Old HDD as a bulk/backup disk</a></li><li><a href="#132-development-stack" data-target="132-development-stack">13.2 Development stack</a></li></ol></li><li><a href="#14-final-verification-checklist" data-target="14-final-verification-checklist">14. Final verification checklist</a></li><li><a href="#15-maintenance-recovery" data-target="15-maintenance-recovery">15. Maintenance &amp; recovery</a></li><li><a href="#sources" data-target="sources">Sources</a></li></ol></nav>
-  <main><article class="content"><p>Pure Arch base + CachyOS <code>x86-64-v3</code> repos, <code>linux-cachyos</code> kernel, NVIDIA open modules, Hyprland 0.56 (Lua config) under uwsm, btrfs with bootable snapper snapshots (Limine), zram, sched-ext, per-core Curve Optimizer via a systemd service.</p>
-<p><strong>Everything here was checked against the live repos on 2026-10-01:</strong> Arch <code>core/extra/multilib</code>, CachyOS <code>cachyos</code>, <code>cachyos-v3</code>, <code>cachyos-core-v3</code>, <code>cachyos-extra-v3</code>, and the AUR. Hyprland syntax was checked against the 0.56.2 source code.</p>
+  <nav class="toc" aria-label="Contents"><ol><li><a href="#how-this-works" data-target="how-this-works">How this works</a></li><li><a href="#0-collect-your-hardware-values-on-windows" data-target="0-collect-your-hardware-values-on-windows">0. Collect your hardware values (on Windows)</a><ol><li><a href="#01-run-the-inventory-script" data-target="01-run-the-inventory-script">0.1 Run the inventory script</a></li><li><a href="#02-every-value-and-how-to-find-it" data-target="02-every-value-and-how-to-find-it">0.2 Every value, and how to find it</a></li><li><a href="#03-choosing-gpu_driver" data-target="03-choosing-gpu_driver">0.3 Choosing GPU_DRIVER</a></li><li><a href="#04-choosing-a-kernel" data-target="04-choosing-a-kernel">0.4 Choosing a kernel</a></li><li><a href="#05-monitors" data-target="05-monitors">0.5 Monitors</a></li><li><a href="#06-getting-your-config-onto-the-live-usb" data-target="06-getting-your-config-onto-the-live-usb">0.6 Getting your config onto the live USB</a></li></ol></li><li><a href="#1-before-you-wipe-windows" data-target="1-before-you-wipe-windows">1. Before you wipe Windows</a></li><li><a href="#2-bios-settings" data-target="2-bios-settings">2. BIOS settings</a></li><li><a href="#3-live-usb-config-network-install" data-target="3-live-usb-config-network-install">3. Live USB: config, network, install</a><ol><li><a href="#what-the-disk-layout-looks-like" data-target="what-the-disk-layout-looks-like">What the disk layout looks like</a></li></ol></li><li><a href="#4-base-install" data-target="4-base-install">4. Base install</a></li><li><a href="#5-inside-the-chroot" data-target="5-inside-the-chroot">5. Inside the chroot</a><ol><li><a href="#51-system-basics" data-target="51-system-basics">5.1 System basics</a></li><li><a href="#52-pacman-multilib-cachyos-repositories" data-target="52-pacman-multilib-cachyos-repositories">5.2 pacman: multilib + CachyOS repositories</a></li><li><a href="#53-boot-chain-limine-mkinitcpio-installed-before-the-kernels" data-target="53-boot-chain-limine-mkinitcpio-installed-before-the-kernels">5.3 Boot chain: Limine + mkinitcpio (installed BEFORE the kernels)</a></li><li><a href="#54-kernels-graphics-driver" data-target="54-kernels-graphics-driver">5.4 Kernels + graphics driver</a></li><li><a href="#55-desktop-audio-gaming-peripherals" data-target="55-desktop-audio-gaming-peripherals">5.5 Desktop, audio, gaming, peripherals</a></li><li><a href="#56-memory-zram-sysctl" data-target="56-memory-zram-sysctl">5.6 Memory: zram + sysctl</a></li><li><a href="#57-services-scheduler-mirrors" data-target="57-services-scheduler-mirrors">5.7 Services, scheduler, mirrors</a></li><li><a href="#58-leave-and-reboot" data-target="58-leave-and-reboot">5.8 Leave and reboot</a></li></ol></li><li><a href="#6-first-boot-quick-checks" data-target="6-first-boot-quick-checks">6. First boot: quick checks</a></li><li><a href="#7-bootable-snapshots-snapper-limine" data-target="7-bootable-snapshots-snapper-limine">7. Bootable snapshots (snapper + Limine)</a></li><li><a href="#8-hyprland" data-target="8-hyprland">8. Hyprland</a><ol><li><a href="#81-session-environment-configuwsmenv" data-target="81-session-environment-configuwsmenv">8.1 Session environment (~/.config/uwsm/env)</a></li><li><a href="#82-confighyprhyprlandlua" data-target="82-confighyprhyprlandlua">8.2 ~/.config/hypr/hyprland.lua</a></li><li><a href="#83-session-services-idle-lock-bar" data-target="83-session-services-idle-lock-bar">8.3 Session services, idle, lock, bar</a></li></ol></li><li><a href="#9-audio-pipewire" data-target="9-audio-pipewire">9. Audio: PipeWire</a><ol><li><a href="#91-lower-latency-fewer-resampling-cases" data-target="91-lower-latency-fewer-resampling-cases">9.1 Lower latency, fewer resampling cases</a></li><li><a href="#92-wireplumber-rules" data-target="92-wireplumber-rules">9.2 WirePlumber rules</a></li><li><a href="#93-easyeffects-mic-processing-and-eq" data-target="93-easyeffects-mic-processing-and-eq">9.3 EasyEffects: mic processing and EQ</a></li><li><a href="#94-headset-sidetone-and-discord" data-target="94-headset-sidetone-and-discord">9.4 Headset sidetone and Discord</a></li></ol></li><li><a href="#10-mouse-keyboard" data-target="10-mouse-keyboard">10. Mouse &amp; keyboard</a></li><li><a href="#11-per-core-curve-optimizer-ryzen-7-5800x3d-only" data-target="11-per-core-curve-optimizer-ryzen-7-5800x3d-only">11. Per-core Curve Optimizer (Ryzen 7 5800X3D only)</a></li><li><a href="#12-gaming" data-target="12-gaming">12. Gaming</a><ol><li><a href="#121-steam" data-target="121-steam">12.1 Steam</a></li><li><a href="#122-other-launchers" data-target="122-other-launchers">12.2 Other launchers</a></li></ol></li><li><a href="#13-optional" data-target="13-optional">13. Optional</a><ol><li><a href="#131-old-hdd-as-a-bulkbackup-disk" data-target="131-old-hdd-as-a-bulkbackup-disk">13.1 Old HDD as a bulk/backup disk</a></li><li><a href="#132-development-stack" data-target="132-development-stack">13.2 Development stack</a></li><li><a href="#133-bluetooth" data-target="133-bluetooth">13.3 Bluetooth</a></li></ol></li><li><a href="#14-final-verification-checklist" data-target="14-final-verification-checklist">14. Final verification checklist</a></li><li><a href="#15-maintenance-recovery" data-target="15-maintenance-recovery">15. Maintenance &amp; recovery</a></li><li><a href="#appendix-reference-build" data-target="appendix-reference-build">Appendix: reference build</a></li><li><a href="#sources" data-target="sources">Sources</a></li></ol></nav>
+  <main><article class="content"><p>A desktop for gaming and coding, built from a pure Arch base with CachyOS's optimised repos and kernels: Hyprland 0.56 (Lua config) under uwsm, btrfs with bootable snapshots in the Limine boot menu, zram, the sched-ext <code>bpfland</code> scheduler, Proton for Windows games, and low-latency PipeWire audio.</p>
+<p>It is written for someone leaving Windows on a <strong>desktop PC</strong> (AMD or Intel CPU; NVIDIA, AMD or Intel graphics). Everything that depends on your hardware is a value in <code>config.sh</code>, which you fill in <strong>before</strong> installing; this guide says where to find each one, first on Windows, then on the Arch live USB. Package names were checked against the live Arch and CachyOS repos on 2026-10-06. Hyprland syntax was checked against the 0.56.2 source.</p>
+<p>The example values come from the reference build (Ryzen 7 5800X3D, RTX 3070, two 144 Hz monitors). Its full configuration is in the <a href="#appendix-reference-build">appendix</a>.</p>
 <hr />
-<h2 id="scripted-install" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="scripted-install"><span class="box"></span></label><span class="h-text">Scripted install</span></h2>
-<p>The repo <a href="https://github.com/luismateusvargas/arch-setup" target="_blank" rel="noopener">https://github.com/luismateusvargas/arch-setup</a> automates sections 3–11. Do sections 1 and 2 by hand first. The rest of this guide is the reference for what each script does.</p>
+<h2 id="how-this-works" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="how-this-works"><span class="box"></span></label><span class="h-text">How this works</span></h2>
+<p>The repo <a href="https://github.com/luismateusvargas/arch-setup" target="_blank" rel="noopener">https://github.com/luismateusvargas/arch-setup</a> automates sections 3–11. This guide explains what each script does, so you can follow or repair any step by hand.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Script</th>
-<th>When</th>
+<th>Where and when</th>
 <th>Guide sections</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td><code>tools/windows-inventory.ps1</code></td>
+<td>Windows, before wiping: suggests your <code>config.sh</code> values</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>check-config.sh</code></td>
+<td>Live USB: compares <code>config.sh</code> with the real hardware; changes nothing</td>
+<td>0, 3</td>
+</tr>
+<tr>
 <td><code>install.sh</code> (+ <code>scripts/chroot.sh</code>)</td>
-<td>Live ISO, as root</td>
+<td>Live USB, as root: <strong>erases the install disk</strong> and installs</td>
 <td>3, 4, 5</td>
 </tr>
 <tr>
@@ -251,12 +262,12 @@ blockquote p:last-child { margin-bottom: 0; }
 </tr>
 <tr>
 <td><code>undervolt.sh install</code> / <code>test</code> / <code>enable</code></td>
-<td>After post-install; enable only after the stability check</td>
+<td>Ryzen 7 5800X3D only, optional</td>
 <td>11</td>
 </tr>
 <tr>
 <td><code>check.sh</code></td>
-<td>Any time</td>
+<td>Any time after post-install</td>
 <td>14</td>
 </tr>
 <tr>
@@ -266,120 +277,332 @@ blockquote p:last-child { margin-bottom: 0; }
 </tr>
 </tbody>
 </table></div>
-<p>On the live ISO:</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">curl -L https://github.com/luismateusvargas/arch-setup/archive/refs/heads/main.tar.gz | tar xz
-cd arch-setup-main
-nano config.sh          # username, timezone, keymap, mirror countries
-bash install.sh
-</code></pre></div>
-<p>After the first boot, in Hyprland:</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">~/arch-setup/post-install.sh
-cd ~/arch-setup &amp;&amp; ./undervolt.sh install &amp;&amp; ./undervolt.sh test
-./undervolt.sh enable   # after the stability check
-./check.sh
-</code></pre></div>
+<p>The whole path:</p>
+<ol>
+<li><strong>On Windows:</strong> run the inventory script, back up, set up peripheral profiles (sections 0–1).</li>
+<li><strong>In the BIOS:</strong> Secure Boot off, UEFI only (section 2).</li>
+<li><strong>On the live USB:</strong> get the repo and your config, then <code>bash check-config.sh</code> and <code>bash install.sh</code> (section 3).</li>
+<li><strong>After the first boot:</strong> <code>~/arch-setup/post-install.sh</code>, then <code>./check.sh</code> (sections 6–14).</li>
+</ol>
 <p>What the scripts do on their own:
-- <strong>Install disk:</strong> picked by model. You must type its path before anything is erased.
-- <strong>LG port and GPU audio device:</strong> detected automatically by <code>post-install.sh</code>.
-- <strong>Existing configs:</strong> backed up before being replaced.</p>
-<p>What still needs you: passwords, the CachyOS script's confirmations, reviewing the <code>ryzen_smu</code> PKGBUILD, and EasyEffects (9.3).</p>
+- <strong>Install disk:</strong> chosen by model name from <code>config.sh</code>. Nothing is erased until you type its path a second time.
+- <strong>Hardware checks:</strong> <code>install.sh</code> refuses to start if <code>config.sh</code> doesn't match the CPU, GPU or disks it finds.
+- <strong>Monitor ports and the GPU's HDMI audio device:</strong> detected by <code>post-install.sh</code>.
+- <strong>Existing configs:</strong> backed up (<code>*.bak.&lt;timestamp&gt;</code>) before being replaced.</p>
+<p>What still needs you: passwords, the CachyOS repo script's confirmations, EasyEffects (9.3) and, for the undervolt, reviewing the <code>ryzen_smu</code> PKGBUILD.</p>
 <hr />
-<h2 id="0-hardware-from-hwinfo-2026-10-01" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="0-hardware-from-hwinfo-2026-10-01"><span class="box"></span></label><span class="h-text">0. Hardware (from HWiNFO, 2026-10-01)</span></h2>
+<h2 id="0-collect-your-hardware-values-on-windows" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="0-collect-your-hardware-values-on-windows"><span class="box"></span></label><span class="h-text">0. Collect your hardware values (on Windows)</span></h2>
+<h3 id="01-run-the-inventory-script" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="01-run-the-inventory-script"><span class="box"></span></label><span class="h-text">0.1 Run the inventory script</span></h3>
+<ol>
+<li>On GitHub, <strong>Code → Download ZIP</strong>, and extract it (e.g. to <code>Downloads\arch-setup-main</code>).</li>
+<li>Open PowerShell in that folder (in Explorer, right-click an empty spot in the folder → <strong>Open in Terminal</strong>) and run:</li>
+</ol>
+<div class="code"><div class="code-bar"><span>text</span><button type="button" class="copy">Copy</button></div><pre><code>powershell -ExecutionPolicy Bypass -File tools\windows-inventory.ps1
+</code></pre></div>
+<p>It only reads information; it changes nothing and needs no admin rights. It prints what it found and writes <strong><code>config.suggested.sh</code></strong>: your username and PC name, time zone, languages, keyboard layout, the disk Windows is on, CPU and GPU type, every monitor's name, resolution, refresh rate and position, and guesses for the optional extras.</p>
+<p><strong>Review every value</strong> against the table below. Then either rename the file to <code>config.local.sh</code> (it is read after <code>config.sh</code> and overrides it), or copy the values into <code>config.sh</code>.</p>
+<h3 id="02-every-value-and-how-to-find-it" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="02-every-value-and-how-to-find-it"><span class="box"></span></label><span class="h-text">0.2 Every value, and how to find it</span></h3>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>Part</th>
-<th>Detail</th>
-<th>Linux notes</th>
+<th>Value</th>
+<th>What it is</th>
+<th>On Windows</th>
+<th>On the live USB</th>
+<th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>CPU</td>
-<td>Ryzen 7 5800X3D (Zen 3, AVX2/FMA/BMI2, no AVX-512)</td>
-<td><code>x86-64-v3</code> repos. Not v4/znver4.</td>
+<td><code>USERNAME</code></td>
+<td>Your Linux login: lowercase, no spaces</td>
+<td>Pick one</td>
+<td>—</td>
+<td><code>luis</code></td>
 </tr>
 <tr>
-<td>Board</td>
-<td>Gigabyte B450M DS3H V2, BIOS F67d</td>
-<td>No Curve Optimizer in BIOS → section 11.</td>
+<td><code>HOST_NAME</code></td>
+<td>Computer name</td>
+<td>Settings → System → About → <em>Device name</em></td>
+<td>—</td>
+<td><code>MINDEXTENSION</code></td>
 </tr>
 <tr>
-<td>RAM</td>
-<td>4×8 GB DDR4-3200, <strong>mixed kits</strong> (2× Crucial BL8G32C16U4B, 2× JUHOR)</td>
-<td>Run memtest once (section 1).</td>
+<td><code>TIMEZONE</code></td>
+<td>IANA time zone</td>
+<td>Converted by the script</td>
+<td><code>timedatectl list-timezones \| grep -i &lt;city&gt;</code></td>
+<td><code>America/Sao_Paulo</code></td>
 </tr>
 <tr>
-<td>GPU</td>
-<td>RTX 3070 LHR (GA104), ReBAR <strong>already enabled</strong> (8 GB)</td>
-<td><code>nvidia-open</code> modules (driver 615.x).</td>
+<td><code>LOCALES</code></td>
+<td>Languages to generate</td>
+<td>Settings → Time &amp; language → Language &amp; region (<code>pt-BR</code> → <code>pt_BR.UTF-8</code>)</td>
+<td><code>grep UTF-8 /usr/share/i18n/SUPPORTED</code></td>
+<td><code>(en_US.UTF-8 pt_BR.UTF-8)</code></td>
 </tr>
 <tr>
-<td>NVMe</td>
-<td>Kingston NV2 1 TB (SNV2S1000G), health 98 %</td>
-<td>Install target. btrfs + zstd.</td>
+<td><code>LANG_DEFAULT</code></td>
+<td>System language, one of <code>LOCALES</code></td>
+<td>—</td>
+<td>—</td>
+<td><code>en_US.UTF-8</code></td>
 </tr>
 <tr>
-<td>HDD</td>
-<td>Samsung HD502HJ 500 GB, ~49 000 power-on hours</td>
-<td>Optional bulk/backup disk only (section 13).</td>
+<td><code>KEYMAP</code></td>
+<td>Keyboard in text mode</td>
+<td>Settings → Time &amp; language → Typing → Advanced keyboard settings</td>
+<td><code>localectl list-keymaps</code>; test with <code>loadkeys &lt;name&gt;</code></td>
+<td><code>br-abnt2</code></td>
 </tr>
 <tr>
-<td>Monitor 1</td>
-<td>LG UltraWide (GSM76FE) 2560×1080 @ 144 Hz, <strong>DisplayPort</strong> (its only DP input)</td>
-<td>VRR 50–144 Hz.</td>
+<td><code>KB_LAYOUT</code>, <code>KB_VARIANT</code></td>
+<td>Keyboard on the desktop</td>
+<td>Same</td>
+<td>—</td>
+<td><code>br</code>, <code>""</code> (US-International: <code>us</code> + <code>intl</code>)</td>
 </tr>
 <tr>
-<td>Monitor 2</td>
-<td>SuperFrame Ace 27" (SF-MN-ACE27FSIFD1B) 1920×1080 @ 144 Hz IPS, <strong>HDMI</strong></td>
-<td>Panel range 48–144 Hz. No VRR over HDMI on NVIDIA unless the monitor supports HDMI 2.1 VRR, so it's left off here.</td>
+<td><code>MIRROR_COUNTRIES</code></td>
+<td>Package download servers, nearest first</td>
+<td>Your country</td>
+<td><code>reflector --list-countries</code></td>
+<td><code>BR,US</code></td>
 </tr>
 <tr>
-<td>Audio</td>
-<td>Realtek ALC897 (onboard), NVIDIA HDMI/DP audio</td>
-<td>In-kernel.</td>
+<td><code>INSTALL_DISK_MODEL</code></td>
+<td><strong>Disk that is erased</strong> for Arch</td>
+<td>PowerShell: <code>Get-PhysicalDisk \| Format-Table FriendlyName, MediaType, Size</code></td>
+<td><code>lsblk -dno NAME,MODEL,SIZE,TRAN</code> (MODEL column)</td>
+<td><code>KINGSTON SNV2S1000G</code></td>
 </tr>
 <tr>
-<td>Headset</td>
-<td>Logitech G PRO X, wired, through the motherboard's 3.5 mm jacks</td>
-<td>Appears as the onboard analog audio device; headset model is not reported.</td>
+<td><code>CPU_VENDOR</code></td>
+<td><code>amd</code> or <code>intel</code></td>
+<td>Settings → System → About → <em>Processor</em></td>
+<td><code>grep -m1 'model name' /proc/cpuinfo</code></td>
+<td><code>amd</code></td>
 </tr>
 <tr>
-<td>Mouse</td>
-<td>Logitech G502 HERO</td>
-<td><code>piper</code> / <code>libratbag</code>.</td>
+<td><code>GPU_DRIVER</code></td>
+<td>Graphics driver, see 0.3</td>
+<td>Device Manager → Display adapters</td>
+<td><code>lspci -nn \| grep -Ei 'vga\|3d\|display'</code></td>
+<td><code>nvidia-open</code></td>
 </tr>
 <tr>
-<td>Keyboard</td>
-<td>Corsair K95 RGB Platinum</td>
-<td><code>ckb-next</code>.</td>
+<td><code>KERNEL</code>, <code>FALLBACK_KERNEL</code></td>
+<td>CachyOS kernels, see 0.4</td>
+<td>—</td>
+<td>—</td>
+<td><code>linux-cachyos</code>, <code>linux-cachyos-lts</code></td>
 </tr>
 <tr>
-<td>Network</td>
-<td>Realtek RTL8168/8111 Gigabit (wired only, no Wi-Fi/Bluetooth)</td>
-<td>In-kernel <code>r8169</code>.</td>
+<td><code>MONITORS</code></td>
+<td>One entry per monitor, see 0.5</td>
+<td>Settings → System → Display → Advanced display</td>
+<td>After the first boot: <code>hyprctl monitors all</code></td>
+<td>see 0.5</td>
+</tr>
+<tr>
+<td><code>CORSAIR_KEYBOARD</code>, <code>GAMING_MOUSE</code>, <code>HEADSETCONTROL</code>, <code>BLUETOOTH</code></td>
+<td>Optional extras (section 10)</td>
+<td>You use iCUE, G HUB / SteelSeries GG, a USB gaming headset, Bluetooth</td>
+<td>—</td>
+<td><code>yes</code> / <code>no</code></td>
+</tr>
+<tr>
+<td><code>HIDE_GPU_AUDIO</code></td>
+<td>Hide the graphics card's HDMI/DP audio output</td>
+<td><code>no</code> if you use your monitor's speakers</td>
+<td>—</td>
+<td><code>yes</code></td>
+</tr>
+<tr>
+<td><code>UNDERVOLT</code>, <code>CO_OFFSETS</code></td>
+<td>Ryzen 7 5800X3D Curve Optimizer (section 11)</td>
+<td>PBO2 Tuner shows your per-core offsets</td>
+<td>—</td>
+<td><code>yes</code>, <code>(-27 -29 …)</code></td>
+</tr>
+<tr>
+<td><code>HDD_MODEL</code>, <code>HDD_SERIAL</code></td>
+<td>Old SATA drive to wipe for storage (13.1)</td>
+<td><code>Get-PhysicalDisk \| Format-Table FriendlyName, SerialNumber</code></td>
+<td><code>lsblk -dno NAME,MODEL,SERIAL,TRAN</code></td>
+<td>keep in <code>config.local.sh</code></td>
 </tr>
 </tbody>
 </table></div>
+<p>On the live USB, <code>bash check-config.sh --suggest</code> prints the CPU, GPU and disk values it detects.</p>
+<h3 id="03-choosing-gpu_driver" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="03-choosing-gpu_driver"><span class="box"></span></label><span class="h-text">0.3 Choosing <code>GPU_DRIVER</code></span></h3>
+<p>Use the card your monitors are plugged into.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Your card</th>
+<th><code>GPU_DRIVER</code></th>
+<th>What gets installed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NVIDIA RTX 20/30/40/50, GTX 16xx</td>
+<td><code>nvidia-open</code></td>
+<td>NVIDIA's open kernel modules, prebuilt for both kernels by CachyOS (no compiling on updates)</td>
+</tr>
+<tr>
+<td>NVIDIA GTX 750/750 Ti, 900, 1000, Titan X/Xp/V, Quadro M/P</td>
+<td><code>nvidia-580xx</code></td>
+<td>The 580 driver series, the last that supports these cards (DKMS: rebuilt on each kernel update)</td>
+</tr>
+<tr>
+<td>NVIDIA GTX 600/700 (Kepler) and older</td>
+<td>—</td>
+<td><strong>Not supported.</strong> No current driver works with this Wayland desktop.</td>
+</tr>
+<tr>
+<td>AMD Radeon R9 285/380, Fury, RX 400 and newer</td>
+<td><code>amd</code></td>
+<td>Mesa (RADV Vulkan); the <code>amdgpu</code> driver is in the kernel</td>
+</tr>
+<tr>
+<td>AMD Radeon HD 7000, R7/R9 200 and 300 series (GCN 1/2, e.g. R9 290/390)</td>
+<td><code>amd</code></td>
+<td>Same, plus boot parameters that switch these cards from the old <code>radeon</code> driver to <code>amdgpu</code> (see below)</td>
+</tr>
+<tr>
+<td>AMD Radeon HD 6000 and older (TeraScale)</td>
+<td>—</td>
+<td><strong>Not supported.</strong> Only the old <code>radeon</code> driver, which has no Vulkan.</td>
+</tr>
+<tr>
+<td>Intel Arc, or integrated Intel graphics</td>
+<td><code>intel</code></td>
+<td>Mesa (ANV Vulkan) + the VA-API video driver. 4th-gen Core (Haswell) and older have only partial Vulkan: many Proton games won't run.</td>
+</tr>
+</tbody>
+</table></div>
+<p>If the PC has integrated graphics <em>and</em> a graphics card, plug every monitor into the card. <code>check-config.sh</code> picks the card over the integrated GPU.</p>
+<p><strong>Older Radeons (GCN 1/2).</strong> Linux has two AMD kernel drivers: <code>amdgpu</code>, with Vulkan, and the old <code>radeon</code>, without it. Proton runs DirectX 9/10/11 games through Vulkan (DXVK), so without it most modern games won't start. Some kernels, including <code>linux-cachyos-lts</code>, still give HD 7000 and R7/R9 200/300 cards (except the R9 285/380) to <code>radeon</code> by default. The installer detects these cards and adds <code>amdgpu.si_support=1 amdgpu.cik_support=1 radeon.si_support=0 radeon.cik_support=0</code> to the kernel command line:
+- <strong>Gains:</strong> Vulkan (Proton, DXVK), the same or better OpenGL (both drivers share Mesa's radeonsi), power profiles, fan and clock control, and full sensor data (the Waybar GPU module needs it).
+- <strong>Caveats:</strong> analog outputs (VGA, or DVI-I with a VGA adapter) on HD 7000-era cards and older kernels; these generations get less testing, so rare suspend or display bugs are more likely. To undo: remove the four parameters from <code>/etc/kernel/cmdline</code> and run <code>sudo limine-update</code>.
+- <strong>Limits of the hardware itself:</strong> DirectX 12 games (VKD3D-Proton) need Vulkan features GCN 1/2 partly lacks, so many run poorly or not at all; no ray tracing or mesh shaders. DirectX 9/10/11 games usually run as well as on Windows.</p>
+<h3 id="04-choosing-a-kernel" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="04-choosing-a-kernel"><span class="box"></span></label><span class="h-text">0.4 Choosing a kernel</span></h3>
+<p>Every CachyOS kernel ships with matching NVIDIA modules. You get two: <code>KERNEL</code>, and <code>FALLBACK_KERNEL</code> as a second boot-menu entry for the day an update breaks the first.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Package</th>
+<th>What it is</th>
+<th>Pick it when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>linux-cachyos</code></td>
+<td>EEVDF scheduler, built with LTO + AutoFDO + Propeller</td>
+<td><strong>Default.</strong> Best all-round choice.</td>
+</tr>
+<tr>
+<td><code>linux-cachyos-bore</code></td>
+<td>BORE scheduler: favours interactive tasks under heavy load</td>
+<td>Games stutter while something compiles or encodes</td>
+</tr>
+<tr>
+<td><code>linux-cachyos-eevdf</code></td>
+<td>Plain EEVDF with the Cachy patches</td>
+<td>You want the upstream scheduler</td>
+</tr>
+<tr>
+<td><code>linux-cachyos-bmq</code></td>
+<td>BMQ scheduler</td>
+<td>Experimenting with latency</td>
+</tr>
+<tr>
+<td><code>linux-cachyos-lts</code></td>
+<td>Long-term-support kernel</td>
+<td><strong>Default fallback</strong>; the most conservative</td>
+</tr>
+<tr>
+<td><code>linux-cachyos-rc</code></td>
+<td>Release candidate</td>
+<td>Very new hardware that needs the newest drivers</td>
+</tr>
+<tr>
+<td><code>linux-cachyos-rt-bore</code></td>
+<td>Real-time kernel</td>
+<td>Audio production; lower throughput for games</td>
+</tr>
+<tr>
+<td><code>linux-cachyos-server</code></td>
+<td>Throughput-tuned</td>
+<td>Not for desktops</td>
+</tr>
+<tr>
+<td><code>linux-cachyos-hardened</code></td>
+<td>Extra security hardening</td>
+<td>Can break some programs and games</td>
+</tr>
+<tr>
+<td><code>linux-cachyos-deckify</code></td>
+<td>Handheld patches</td>
+<td>Steam Deck-style devices</td>
+</tr>
+<tr>
+<td><code>…-lto</code> suffix</td>
+<td>The same kernel built with Clang LTO</td>
+<td>Optional, e.g. <code>linux-cachyos-bore-lto</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>sched-ext (<code>bpfland</code>, section 5.7) replaces the CPU scheduler at runtime on any of them, so the kernel choice matters less than it sounds. Very new hardware (released in the last few months) may need <code>linux-cachyos-rc</code> as <code>KERNEL</code>.</p>
+<h3 id="05-monitors" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="05-monitors"><span class="box"></span></label><span class="h-text">0.5 Monitors</span></h3>
+<p>One line per monitor; the first is the main one (workspaces 1–2), the second gets workspace 3:</p>
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">#          MATCH       MODE             POSITION  SCALE  VRR
+MONITORS=(&quot;ULTRAWIDE|2560x1080@144|1920x0|1|2&quot; &quot;HDMI-A-1|1920x1080@144|0x0|1|0&quot;)
+</code></pre></div>
+<ul>
+<li><strong>MATCH:</strong> part of the monitor's name as Windows shows it (Advanced display → <em>Display information</em>), e.g. <code>LG ULTRAWIDE</code>, <code>VG27AQ</code>, or a Linux port name such as <code>DP-1</code> or <code>HDMI-A-1</code>. Port names only exist on Linux; names work from Windows.</li>
+<li><strong>MODE:</strong> <code>WIDTHxHEIGHT@HZ</code>, or <code>highrr</code> (highest refresh rate), or <code>preferred</code>.</li>
+<li><strong>POSITION:</strong> top-left corner in pixels. The leftmost monitor is <code>0x0</code>; a monitor to its right starts at the left one's width (<code>1920x0</code>). Or <code>auto</code>.</li>
+<li><strong>SCALE:</strong> <code>1</code> for 100 %, <code>1.25</code>, <code>1.5</code>, <code>2</code>, as in Windows' <em>Scale</em> setting.</li>
+<li><strong>VRR</strong> (FreeSync/G-Sync): <code>0</code> off, <code>1</code> always, <code>2</code> fullscreen apps only (best on NVIDIA: no desktop flicker). NVIDIA has no VRR over HDMI unless the monitor supports HDMI 2.1 VRR, so use <code>0</code> there.</li>
+</ul>
+<p><code>MONITORS=()</code> lets Hyprland pick every monitor's preferred mode. You can change monitors any time later: edit <code>MONITORS</code> and rerun <code>post-install.sh</code>.</p>
+<h3 id="06-getting-your-config-onto-the-live-usb" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="06-getting-your-config-onto-the-live-usb"><span class="box"></span></label><span class="h-text">0.6 Getting your config onto the live USB</span></h3>
+<p>The live USB starts from a clean copy of the repo, so your values have to travel with you. Pick one:</p>
+<ul>
+<li><strong>GitHub fork (easiest):</strong> fork the repo, edit <code>config.sh</code> in the browser (pencil icon), and on the live USB download <em>your fork</em> in section 3. Never put a disk serial in a public fork.</li>
+<li><strong>USB stick:</strong> copy the whole <code>arch-setup-main</code> folder (with <code>config.local.sh</code>) to any FAT32/exFAT stick. On the live USB:
+  <code>bash
+  lsblk                                # find the stick, e.g. /dev/sdb1
+  mkdir -p /root/usb &amp;&amp; mount /dev/sdb1 /root/usb
+  cp -r /root/usb/arch-setup-main /root/ &amp;&amp; cd /root/arch-setup-main</code></li>
+<li><strong>Type it in:</strong> note the values (phone photo) and edit <code>config.sh</code> with <code>nano</code> on the live USB.</li>
+</ul>
+<p>Files edited on Windows may have Windows line endings; the scripts convert them automatically.</p>
 <hr />
 <h2 id="1-before-you-wipe-windows" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="1-before-you-wipe-windows"><span class="box"></span></label><span class="h-text">1. Before you wipe Windows</span></h2>
 <ol>
-<li><strong>Back up</strong> everything on <code>C:</code> you care about, plus <code>D:</code> (the HDD) if you will format it. Also back up <code>Documents\Black Desert\</code> (UI layout, settings).</li>
-<li><strong>G HUB</strong>: switch the G502 to <em>On-board memory mode</em> and save your DPI/buttons to the mouse. It then works identically on Linux even before <code>piper</code> is set up.</li>
-<li><strong>iCUE</strong>: save lighting and macros to the K95's <strong>hardware/onboard</strong> profile.</li>
-<li>Write down the G HUB EQ settings for the PRO X. They are software-only and you'll redo them in EasyEffects.</li>
-<li>Download the latest Arch ISO from <a href="https://archlinux.org/download/" target="_blank" rel="noopener">https://archlinux.org/download/</a> and verify its checksum. Write it with Rufus (<strong>DD mode</strong>) or Ventoy.</li>
+<li><strong>Back up</strong> everything on the install disk: Documents, Desktop, Pictures, Downloads, game saves that aren't in the cloud (<code>Documents\My Games</code>, <code>%APPDATA%</code>, <code>%LOCALAPPDATA%</code>), browser data (or turn on browser sync), license keys, and 2FA recovery codes. If <code>C:</code> is <strong>BitLocker</strong>-encrypted (the inventory script warns you), Linux can't read it later: copy everything out first.</li>
+<li><strong>Check your games:</strong> most Steam games run through Proton, but some anti-cheat systems block Linux. Look yours up on <a href="https://areweanticheatyet.com" target="_blank" rel="noopener">https://areweanticheatyet.com</a> and <a href="https://www.protondb.com" target="_blank" rel="noopener">https://www.protondb.com</a>.</li>
+<li><strong>Peripherals:</strong> save settings to the device itself so they work on Linux immediately:
+   - Logitech G HUB: switch the mouse to <em>On-board memory mode</em> and save DPI/buttons to it.
+   - Corsair iCUE: save lighting and macros to a <strong>hardware/onboard</strong> profile.
+   - Write down any software-only EQ or mic settings (G HUB, Blue VO!CE, NVIDIA Broadcast): you'll redo them in EasyEffects (9.3).</li>
+<li><strong>Make the USB stick:</strong> download the latest Arch ISO from <a href="https://archlinux.org/download/" target="_blank" rel="noopener">https://archlinux.org/download/</a> and verify its checksum. Write it with Rufus (<strong>DD image mode</strong>) or Ventoy.</li>
 <li><strong>Test before wiping:</strong>
-   - Boot the Arch ISO and pick <strong>Memtest86+</strong> from its boot menu. Do one full pass; the mixed RAM kits are the most likely source of random crashes.
-   - Optionally boot a CachyOS live ISO, which has a desktop, to confirm both monitors at 144 Hz, Ethernet, audio and peripherals.</li>
-<li>Optional: make a Windows 11 install USB with Microsoft's Media Creation Tool, in case you ever want to go back.</li>
+   - Boot the Arch USB and pick <strong>Memtest86+</strong> from its menu. One full pass catches bad RAM, the most common cause of random crashes, especially with mixed RAM kits.
+   - Optionally boot a CachyOS live USB, which has a desktop, to confirm your monitors, network, audio and peripherals work.</li>
+<li>Optional: make a Windows install USB with Microsoft's Media Creation Tool, in case you ever want to go back.</li>
 </ol>
 <blockquote>
-<p><strong>Tip for the install:</strong> the Arch ISO has no browser. To copy-paste commands from this file, run <code>passwd</code> and <code>systemctl start sshd</code> on the ISO, then from a phone or laptop on the same network: <code>ssh root@&lt;ip-shown-by-ip-a&gt;</code>.</p>
+<p><strong>Tip:</strong> the Arch live USB has no browser. To copy-paste commands from this guide, run <code>passwd</code> and <code>systemctl start sshd</code> on it, then from another computer on the same network: <code>ssh root@&lt;address shown by ip a&gt;</code>.</p>
 </blockquote>
 <hr />
-<h2 id="2-bios-settings-f67d" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="2-bios-settings-f67d"><span class="box"></span></label><span class="h-text">2. BIOS settings (F67d)</span></h2>
-<p>Menu names vary slightly between BIOS versions.</p>
+<h2 id="2-bios-settings" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="2-bios-settings"><span class="box"></span></label><span class="h-text">2. BIOS settings</span></h2>
+<p>Enter the BIOS with Del or F2 at power-on. Menu names vary by board.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -390,57 +613,71 @@ cd ~/arch-setup &amp;&amp; ./undervolt.sh install &amp;&amp; ./undervolt.sh test
 </thead>
 <tbody>
 <tr>
-<td>Boot → <strong>Secure Boot</strong></td>
+<td><strong>Secure Boot</strong></td>
 <td><strong>Disabled</strong></td>
-<td>Currently <em>Enabled</em>. The Arch ISO and the unsigned DKMS module (<code>ryzen_smu</code>) need it off.</td>
+<td>The Arch USB and DKMS-built drivers (580xx NVIDIA, <code>ryzen_smu</code>) are unsigned.</td>
 </tr>
 <tr>
-<td>Boot → CSM Support</td>
-<td>Disabled</td>
-<td>Required for ReBAR (already the case).</td>
+<td>CSM / Legacy boot</td>
+<td>Disabled (UEFI only)</td>
+<td><code>install.sh</code> requires UEFI; also needed for ReBAR.</td>
 </tr>
 <tr>
-<td>Settings → IO Ports → Above 4G Decoding / Re-Size BAR</td>
-<td>Enabled / Auto</td>
-<td><strong>Already on</strong> (HWiNFO: ReBAR enabled, 8 GB). Leave it.</td>
-</tr>
-<tr>
-<td>Tweaker → Extreme Memory Profile (XMP)</td>
-<td>Profile 1</td>
-<td>Already running DDR4-3200.</td>
-</tr>
-<tr>
-<td>Settings → AMD CBS → NBIO Common Options → SMU Common Options → <strong>CPPC</strong> / <strong>CPPC Preferred Cores</strong></td>
+<td>Above 4G Decoding / Re-Size BAR</td>
 <td>Enabled</td>
-<td>Required by <code>amd_pstate</code>.</td>
+<td>Resizable BAR: the CPU can see all of the GPU's memory. Free performance on RTX 30+ and RX 6000+.</td>
 </tr>
 <tr>
-<td>Boot → Fast Boot</td>
+<td>XMP / EXPO memory profile</td>
+<td>Profile 1</td>
+<td>Runs your RAM at its rated speed (Windows didn't change this either).</td>
+</tr>
+<tr>
+<td>AMD only: CPPC and CPPC Preferred Cores (AMD CBS → NBIO / SMU options)</td>
+<td>Enabled or Auto</td>
+<td>Needed by the <code>amd_pstate</code> CPU frequency driver.</td>
+</tr>
+<tr>
+<td>Fast Boot</td>
 <td>Disabled</td>
-<td>Reliable USB keyboard in the Limine menu.</td>
+<td>Reliable USB keyboard in the boot menu.</td>
 </tr>
 </tbody>
 </table></div>
+<p>To boot the USB, use the one-time boot menu key (often F8, F11 or F12) and pick the <strong>UEFI</strong> entry for the stick.</p>
 <hr />
-<h2 id="3-live-usb-disks" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="3-live-usb-disks"><span class="box"></span></label><span class="h-text">3. Live USB: disks</span></h2>
-<p>Boot the Arch ISO in UEFI mode, with Ethernet plugged in.</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">cat /sys/firmware/efi/fw_platform_size        # must print 64
+<h2 id="3-live-usb-config-network-install" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="3-live-usb-config-network-install"><span class="box"></span></label><span class="h-text">3. Live USB: config, network, install</span></h2>
+<p>Boot the USB in UEFI mode.</p>
+<p><strong>Network.</strong> Ethernet works on its own. For Wi-Fi:</p>
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">iwctl device list                          # your Wi-Fi device, e.g. wlan0
+iwctl station wlan0 scan
+iwctl station wlan0 get-networks
+iwctl station wlan0 connect &quot;&lt;network name&gt;&quot;
 ping -c 2 archlinux.org
-timedatectl set-ntp true
-lsblk -o NAME,MODEL,SIZE,TYPE                 # NVMe = KINGSTON SNV2S1000G (expected /dev/nvme0n1)
 </code></pre></div>
-<p><strong>Destructive from here on.</strong> Set <code>DISK</code> to the Kingston NVMe shown by <code>lsblk</code>:</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">DISK=/dev/nvme0n1
-
-blkdiscard -f &quot;$DISK&quot;                         # full TRIM: clean slate for the DRAM-less NV2
+<p><strong>Get the repo</strong> (or use your USB stick copy, see 0.6). For a fork, replace <code>luismateusvargas</code> with your GitHub name:</p>
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">curl -L https://github.com/luismateusvargas/arch-setup/archive/refs/heads/main.tar.gz | tar xz
+cd arch-setup-main
+nano config.sh             # or put your config.local.sh here
+bash check-config.sh       # compares config.sh with this PC; changes nothing
+bash install.sh            # checks again, then asks before erasing the disk
+</code></pre></div>
+<p><code>check-config.sh</code> lists the detected CPU, GPUs and disks, and every value that's wrong or doesn't match the hardware. <code>install.sh</code> runs the same check and stops before touching any disk if it fails.</p>
+<p><code>install.sh</code> then:
+1. Finds <code>INSTALL_DISK_MODEL</code> and makes you <strong>type its path</strong> before erasing anything.
+2. Partitions it, creates the btrfs subvolumes, runs pacstrap and writes the fstab (sections 3–4 below).
+3. Runs <code>scripts/chroot.sh</code> inside the new system (section 5). It asks for the root and user passwords, and the CachyOS script asks for a few confirmations.</p>
+<p>If the chroot stage stops after partitioning, fix the reported error and resume with <code>arch-chroot /mnt /bin/bash /root/arch-setup/scripts/chroot.sh</code>. <strong>Do not rerun <code>install.sh</code></strong>: it erases the disk again.</p>
+<h3 id="what-the-disk-layout-looks-like" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="what-the-disk-layout-looks-like"><span class="box"></span></label><span class="h-text">What the disk layout looks like</span></h3>
+<p>For reference, these are the commands <code>install.sh</code> runs (<code>DISK</code> is your install disk, e.g. <code>/dev/nvme0n1</code>; partitions are <code>p1</code>/<code>p2</code> on NVMe and <code>1</code>/<code>2</code> on SATA):</p>
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">blkdiscard -f &quot;$DISK&quot;                         # full TRIM: clean slate for the SSD
 sgdisk -Z &quot;$DISK&quot;
 sgdisk -n1:0:+4G -t1:ef00 -c1:EFI \
        -n2:0:0   -t2:8304 -c2:ARCH &quot;$DISK&quot;
-
 mkfs.fat -F 32 -n EFI  &quot;${DISK}p1&quot;
 mkfs.btrfs -f -L ARCH  &quot;${DISK}p2&quot;
 </code></pre></div>
-<p>The 4 GiB ESP holds both kernels, the NVIDIA initramfs images and the snapshot boot entries. <code>limine-snapper-sync</code> recommends at least 4 GiB.</p>
+<p>The 4 GiB EFI partition (<code>ESP_SIZE</code>) holds both kernels, their initramfs images and the snapshot boot entries; <code>limine-snapper-sync</code> recommends at least 4 GiB.</p>
 <p>btrfs subvolumes. Only <code>@</code> gets snapshots; logs, the package cache and Docker stay out of them:</p>
 <div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">mount &quot;${DISK}p2&quot; /mnt
 for sv in @ @home @log @pkg @docker; do btrfs subvolume create &quot;/mnt/$sv&quot;; done
@@ -455,185 +692,174 @@ mount -o $OPTS,subvol=@pkg     &quot;${DISK}p2&quot; /mnt/var/cache/pacman/pkg
 mount -o $OPTS,subvol=@docker  &quot;${DISK}p2&quot; /mnt/var/lib/docker
 mount -o fmask=0077,dmask=0077 &quot;${DISK}p1&quot; /mnt/boot
 </code></pre></div>
-<p>Notes:
-- No swap partition is needed; zram is configured in section 5.6.
-- No <code>discard</code> mount option is needed: btrfs enables async discard on NVMe automatically.</p>
+<p>No swap partition is needed (zram, section 5.6), and no <code>discard</code> option (btrfs enables async discard on SSDs by itself).</p>
 <hr />
 <h2 id="4-base-install" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="4-base-install"><span class="box"></span></label><span class="h-text">4. Base install</span></h2>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">reflector --country BR,US --protocol https --latest 15 --sort rate --save /etc/pacman.d/mirrorlist   # adjust countries
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">reflector --country &quot;$MIRROR_COUNTRIES&quot; --protocol https --latest 15 --sort rate --save /etc/pacman.d/mirrorlist
 
-pacstrap -K /mnt base base-devel linux-firmware amd-ucode btrfs-progs dosfstools efibootmgr \
+pacstrap -K /mnt base base-devel linux-firmware &quot;$CPU_VENDOR-ucode&quot; btrfs-progs dosfstools efibootmgr \
                  networkmanager sudo git neovim nano man-db man-pages bash-completion \
                  pacman-contrib reflector smartmontools zram-generator python
 
 genfstab -U /mnt &gt;&gt; /mnt/etc/fstab
 sed -i 's/,subvolid=[0-9]*//g' /mnt/etc/fstab   # snapshot restore changes subvolume IDs; mount by name only
-cat /mnt/etc/fstab                               # sanity check: 6 entries (/, /home, /var/log, pkg, docker, /boot)
-
-arch-chroot /mnt
 </code></pre></div>
+<p><code>amd-ucode</code> or <code>intel-ucode</code> loads CPU microcode fixes at boot. No kernel yet: the CachyOS kernels come in 5.4. The fstab must have 6 entries: <code>/</code>, <code>/home</code>, <code>/var/log</code>, the package cache, Docker and <code>/boot</code>.</p>
 <hr />
 <h2 id="5-inside-the-chroot" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="5-inside-the-chroot"><span class="box"></span></label><span class="h-text">5. Inside the chroot</span></h2>
 <h3 id="51-system-basics" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="51-system-basics"><span class="box"></span></label><span class="h-text">5.1 System basics</span></h3>
-<p>Adjust the timezone, keymap and username below. For a Brazilian ABNT2 keyboard use <code>KEYMAP=br-abnt2</code> (and <code>kb_layout = "br"</code> in section 8.2).</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">USERNAME=luis
-
-ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
-hwclock --systohc
-sed -i -e 's/^#en_US.UTF-8/en_US.UTF-8/' -e 's/^#pt_BR.UTF-8/pt_BR.UTF-8/' /etc/locale.gen
-locale-gen
-echo 'LANG=en_US.UTF-8' &gt; /etc/locale.conf
-echo 'KEYMAP=us'        &gt; /etc/vconsole.conf
-echo 'MINDEXTENSION'    &gt; /etc/hostname
-
-passwd                                           # root password
-useradd -m -G wheel -s /bin/bash &quot;$USERNAME&quot;
-passwd &quot;$USERNAME&quot;
-echo '%wheel ALL=(ALL:ALL) ALL' &gt; /etc/sudoers.d/10-wheel
-chmod 440 /etc/sudoers.d/10-wheel
-</code></pre></div>
+<p>From <code>config.sh</code>: time zone, <code>LOCALES</code>, <code>LANG_DEFAULT</code>, <code>KEYMAP</code> and <code>HOST_NAME</code>. Then the root password, your user (<code>USERNAME</code>, in the <code>wheel</code> group) and its password, and <code>sudo</code> for <code>wheel</code>.</p>
 <h3 id="52-pacman-multilib-cachyos-repositories" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="52-pacman-multilib-cachyos-repositories"><span class="box"></span></label><span class="h-text">5.2 pacman: multilib + CachyOS repositories</span></h3>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">sed -i 's/^#Color/Color/' /etc/pacman.conf
-sed -i '/^#\[multilib\]/{s/^#//;n;s/^#//}' /etc/pacman.conf     # Steam, lib32 drivers
-
-cd /tmp
-curl -LO https://mirror.cachyos.org/cachyos-repo.tar.xz
-tar xvf cachyos-repo.tar.xz &amp;&amp; cd cachyos-repo
-./cachyos-repo.sh
+<p><code>multilib</code> is enabled for Steam and 32-bit drivers. Then the official CachyOS script, which:
+- detects your CPU's instruction-set level and adds the matching optimised repos: <code>[cachyos-v3]</code> (most CPUs since ~2015), <code>[cachyos-v4]</code> (AVX-512) or <code>[cachyos-znver4]</code> (Ryzen 7000/9000), plus <code>-core</code>/<code>-extra</code>, all above the Arch repos. <code>[cachyos]</code> is added for every CPU;
+- imports the CachyOS key, installs the keyring, the mirrorlists and <strong>CachyOS's patched pacman</strong>, and sets <code>Architecture = auto</code>.</p>
+<p><code>check-config.sh</code> shows your level (<code>CPU level</code>). Don't hand-edit these repos into <code>pacman.conf</code>: stock pacman refuses the optimised packages.</p>
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">grep -E '^\[|^Architecture' /etc/pacman.conf     # verify
 </code></pre></div>
-<p>The official script handles the repo setup. It:
-- detects <code>x86-64-v3</code> on the 5800X3D;
-- imports the key <code>F3B607488DB35A47</code>;
-- installs the keyring, the mirrorlists and <strong>CachyOS's patched pacman</strong>;
-- sets <code>Architecture = auto</code>;
-- adds <code>[cachyos-v3]</code>, <code>[cachyos-core-v3]</code>, <code>[cachyos-extra-v3]</code> and <code>[cachyos]</code> above the Arch repos;
-- runs <code>pacman -Syu</code>.</p>
-<p>After the repo script changes mirrors, <code>scripts/chroot.sh</code> also runs <code>pacman -Syyu --noconfirm</code> once to force-refresh all package databases before the kernel transaction, then checks that the CachyOS kernel packages are visible. This guards against the stale database or mirror condition reported during the first installation. If <code>chroot.sh</code> still stops after partitioning, resolve the reported package error and resume from the live ISO with <code>arch-chroot /mnt /bin/bash /root/arch-setup/scripts/chroot.sh</code>; do not restart <code>install.sh</code>, which erases the NVMe.</p>
-<p>Do not hand-edit these repos into <code>pacman.conf</code>: stock pacman refuses <code>x86_64_v3</code> packages.</p>
-<p>Verify:</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">grep -E '^\[|^Architecture' /etc/pacman.conf
-# Architecture = auto, then [cachyos-v3] [cachyos-core-v3] [cachyos-extra-v3] [cachyos] [core] [extra] [multilib]
-</code></pre></div>
-<h3 id="53-boot-chain-limine-mkinitcpio-install-before-the-kernels" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="53-boot-chain-limine-mkinitcpio-install-before-the-kernels"><span class="box"></span></label><span class="h-text">5.3 Boot chain: Limine + mkinitcpio (install BEFORE the kernels)</span></h3>
-<p><code>limine-mkinitcpio-hook</code> replaces the stock mkinitcpio pacman hook and provides the <code>sd-btrfs-overlayfs</code> hook that lets you boot read-only snapshots. pacman only runs hooks that existed when a transaction started, so this must be installed <strong>before</strong> the kernels, in its own transaction.</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">pacman -S limine limine-mkinitcpio-hook mkinitcpio
-
-# Kernel command line, used by every kernel entry Limine generates
-ROOT_UUID=$(findmnt -no UUID /)
-echo &quot;root=UUID=$ROOT_UUID rootflags=subvol=/@ rw quiet nowatchdog zswap.enabled=0 amd_pstate=active nvidia_drm.modeset=1&quot; &gt; /etc/kernel/cmdline
-cat /etc/kernel/cmdline
-
-# Early-load NVIDIA (KMS), systemd initramfs, snapshot overlay hook
-sed -i 's/^MODULES=.*/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
-sed -i 's/^HOOKS=.*/HOOKS=(base systemd autodetect microcode modconf keyboard sd-vconsole block filesystems sd-btrfs-overlayfs fsck)/' /etc/mkinitcpio.conf
-grep -E '^(MODULES|HOOKS)=' /etc/mkinitcpio.conf
-</code></pre></div>
-<p>What the cmdline flags do:
-- <code>zswap.enabled=0</code>: zram is used instead.
-- <code>amd_pstate=active</code>: EPP CPU frequency driver.
-- <code>nvidia_drm.modeset=1</code>: already the default in <code>nvidia-utils</code>; kept here as a belt-and-braces setting.</p>
-<h3 id="54-kernels-nvidia" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="54-kernels-nvidia"><span class="box"></span></label><span class="h-text">5.4 Kernels + NVIDIA</span></h3>
-<p>Two kernels, both with <strong>prebuilt</strong> NVIDIA open modules from CachyOS (no DKMS build on every kernel update). <code>linux-cachyos-lts</code> is the fallback if a mainline kernel or driver update ever breaks.</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">pacman -S linux-cachyos linux-cachyos-headers linux-cachyos-nvidia-open \
-          linux-cachyos-lts linux-cachyos-lts-headers linux-cachyos-lts-nvidia-open \
-          nvidia-utils lib32-nvidia-utils nvidia-settings egl-wayland libva-nvidia-driver
-</code></pre></div>
-<p>Install the bootloader, register it in NVRAM, and add a fallback copy at <code>EFI/BOOT/BOOTX64.EFI</code> in case a firmware update wipes the boot entries:</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">limine-install
-limine-install --fallback
-limine-update
-limine-list          # expect entries for linux-cachyos and linux-cachyos-lts
-</code></pre></div>
+<p>After the repo change, <code>chroot.sh</code> forces a full database refresh (<code>pacman -Syyu</code>) once and checks that your <code>KERNEL</code> and <code>FALLBACK_KERNEL</code> exist, which also catches a typo in <code>config.sh</code> before anything else is installed.</p>
+<h3 id="53-boot-chain-limine-mkinitcpio-installed-before-the-kernels" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="53-boot-chain-limine-mkinitcpio-installed-before-the-kernels"><span class="box"></span></label><span class="h-text">5.3 Boot chain: Limine + mkinitcpio (installed BEFORE the kernels)</span></h3>
+<p><code>limine-mkinitcpio-hook</code> replaces the stock mkinitcpio pacman hook and adds the <code>sd-btrfs-overlayfs</code> hook that lets you boot read-only snapshots. pacman only runs hooks that existed when a transaction started, so it is installed in its own transaction, before the kernels.</p>
+<p>The kernel command line (<code>/etc/kernel/cmdline</code>, used by every Limine entry) and the initramfs depend on your hardware:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Always</th>
+<th>AMD CPU</th>
+<th>Intel CPU</th>
+<th>NVIDIA (<code>nvidia-*</code>)</th>
+<th>AMD / Intel GPU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cmdline</td>
+<td><code>root=UUID=… rootflags=subvol=/@ rw quiet nowatchdog zswap.enabled=0</code></td>
+<td><code>amd_pstate=active</code></td>
+<td>—</td>
+<td><code>nvidia_drm.modeset=1</code></td>
+<td>GCN 1/2 Radeons only: <code>amdgpu.si_support=1 amdgpu.cik_support=1 radeon.si_support=0 radeon.cik_support=0</code></td>
+</tr>
+<tr>
+<td><code>MODULES=</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td><code>nvidia nvidia_modeset nvidia_uvm nvidia_drm</code> (loaded early)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>HOOKS=</code></td>
+<td><code>base systemd autodetect microcode modconf … keyboard sd-vconsole block filesystems sd-btrfs-overlayfs fsck</code></td>
+<td></td>
+<td></td>
+<td>without <code>kms</code>, so nouveau never loads</td>
+<td>with <code>kms</code></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><code>zswap.enabled=0</code>: zram is used instead.</li>
+<li><code>amd_pstate=active</code>: AMD's modern CPU frequency driver (needs CPPC in the BIOS). Intel CPUs use <code>intel_pstate</code> by default.</li>
+<li><code>nvidia_drm.modeset=1</code>: already the driver's default; kept as a safety net.</li>
+</ul>
+<h3 id="54-kernels-graphics-driver" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="54-kernels-graphics-driver"><span class="box"></span></label><span class="h-text">5.4 Kernels + graphics driver</span></h3>
+<p>Both kernels with their headers (DKMS modules build against them), plus the driver packages for <code>GPU_DRIVER</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><code>GPU_DRIVER</code></th>
+<th>Packages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nvidia-open</code></td>
+<td><code>&lt;kernel&gt;-nvidia-open</code> for both kernels (prebuilt; <code>nvidia-open-dkms</code> if a kernel has none), <code>nvidia-utils lib32-nvidia-utils nvidia-settings egl-wayland libva-nvidia-driver</code></td>
+</tr>
+<tr>
+<td><code>nvidia-580xx</code></td>
+<td><code>nvidia-580xx-dkms nvidia-580xx-utils lib32-nvidia-580xx-utils nvidia-580xx-settings egl-wayland libva-nvidia-driver</code></td>
+</tr>
+<tr>
+<td><code>amd</code></td>
+<td><code>mesa lib32-mesa vulkan-radeon lib32-vulkan-radeon</code></td>
+</tr>
+<tr>
+<td><code>intel</code></td>
+<td><code>mesa lib32-mesa vulkan-intel lib32-vulkan-intel intel-media-driver</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Then Limine is installed, registered in the firmware, and copied to the fallback path <code>EFI/BOOT/BOOTX64.EFI</code> in case a BIOS update wipes the boot entries. <code>limine-list</code> shows an entry for each kernel.</p>
 <h3 id="55-desktop-audio-gaming-peripherals" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="55-desktop-audio-gaming-peripherals"><span class="box"></span></label><span class="h-text">5.5 Desktop, audio, gaming, peripherals</span></h3>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash"># Hyprland desktop (uwsm-managed session)
-pacman -S hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk uwsm libnewt \
-          hyprpolkitagent hyprlock hypridle awww waybar swaync rofi kitty \
-          grim slurp wl-clipboard cliphist qt5-wayland qt6-wayland \
-          noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono-nerd otf-font-awesome ttf-liberation \
-          thunar gvfs xdg-user-dirs firefox nwg-look playerctl ly
-
-# Audio
-pacman -S pipewire pipewire-alsa pipewire-pulse pipewire-jack lib32-pipewire lib32-pipewire-jack \
-          wireplumber rtkit pavucontrol easyeffects lsp-plugins-lv2 calf headsetcontrol
-
-# Gaming
-pacman -S steam lutris umu-launcher proton-cachyos-slr gamemode lib32-gamemode \
-          mangohud lib32-mangohud gamescope heroic-games-launcher protonup-qt winetricks
-
-# Scheduler, peripherals, AUR helper, DKMS (for ryzen_smu later)
-pacman -S scx-scheds scx-tools piper libratbag ckb-next yay dkms stress-ng
-</code></pre></div>
-<p><code>yay</code>, <code>heroic-games-launcher</code>, <code>protonup-qt</code> and <code>proton-cachyos-slr</code> come from the CachyOS repo, so none of them need the AUR.</p>
+<p>The package lists are in <code>scripts/chroot.sh</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Group</th>
+<th>What</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desktop</td>
+<td>Hyprland + portals, uwsm, hyprlock/hypridle, Waybar, swaync (notifications), rofi (app launcher), kitty (terminal), Thunar (files), Firefox, screenshots (grim/slurp), clipboard history, fonts, the <code>ly</code> login screen</td>
+</tr>
+<tr>
+<td>Audio</td>
+<td>PipeWire (+ PulseAudio/JACK compatibility), WirePlumber, pavucontrol, EasyEffects with LSP and Calf plugins</td>
+</tr>
+<tr>
+<td>Gaming</td>
+<td>Steam, Lutris, Heroic (Epic/GOG/Amazon), umu-launcher, <code>proton-cachyos-slr</code>, GameMode, MangoHud, gamescope, ProtonUp-Qt, winetricks</td>
+</tr>
+<tr>
+<td>System</td>
+<td>sched-ext schedulers, <code>yay</code> (AUR helper), DKMS, stress-ng</td>
+</tr>
+<tr>
+<td>Optional (config.sh)</td>
+<td><code>ckb-next</code> (<code>CORSAIR_KEYBOARD</code>), <code>piper libratbag</code> (<code>GAMING_MOUSE</code>), <code>headsetcontrol</code> (<code>HEADSETCONTROL</code>), <code>bluez bluez-utils blueman</code> (<code>BLUETOOTH</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>yay</code>, Heroic, ProtonUp-Qt and <code>proton-cachyos-slr</code> come from the CachyOS repo, so none of them need the AUR.</p>
 <h3 id="56-memory-zram-sysctl" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="56-memory-zram-sysctl"><span class="box"></span></label><span class="h-text">5.6 Memory: zram + sysctl</span></h3>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">cat &gt; /etc/systemd/zram-generator.conf &lt;&lt;'EOF'
-[zram0]
-zram-size = min(ram / 2, 16384)
-compression-algorithm = zstd
-swap-priority = 100
-fs-type = swap
-EOF
-
-cat &gt; /etc/sysctl.d/99-workstation.conf &lt;&lt;'EOF'
-# zram-optimised swap (Arch Wiki: Zram#Optimizing swap on zram)
-vm.swappiness = 180
-vm.watermark_boost_factor = 0
-vm.watermark_scale_factor = 125
-vm.page-cluster = 0
-
-# Cap dirty page cache so big writes (compiles, game patches) don't cause stalls
-vm.dirty_bytes = 268435456
-vm.dirty_background_bytes = 67108864
-EOF
-</code></pre></div>
-<p>Arch already ships <code>vm.max_map_count = 1048576</code>, which is enough for Proton, so it isn't set here.</p>
-<p>Load the NTSYNC driver so Proton's Windows-sync emulation uses it:</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">echo ntsync &gt; /etc/modules-load.d/ntsync.conf
-</code></pre></div>
+<p>Compressed swap in RAM instead of a swap partition: <a href="files/etc/systemd/zram-generator.conf"><code>files/etc/systemd/zram-generator.conf</code></a> (half the RAM, at most 16 GiB, zstd). <a href="files/etc/sysctl.d/99-workstation.conf"><code>files/etc/sysctl.d/99-workstation.conf</code></a> tunes swapping for zram and caps the dirty page cache so big writes (game patches, compiles) don't cause stalls. Arch already sets <code>vm.max_map_count = 1048576</code>, which is enough for Proton.</p>
+<p>The NTSYNC driver is loaded at boot so Proton's Windows-synchronisation emulation can use it.</p>
 <h3 id="57-services-scheduler-mirrors" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="57-services-scheduler-mirrors"><span class="box"></span></label><span class="h-text">5.7 Services, scheduler, mirrors</span></h3>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">cat &gt; /etc/scx_loader.toml &lt;&lt;'EOF'
-default_sched = &quot;scx_bpfland&quot;
-default_mode = &quot;Gaming&quot;
-EOF
-
-cat &gt; /etc/xdg/reflector/reflector.conf &lt;&lt;'EOF'
---save /etc/pacman.d/mirrorlist
---country BR,US
---protocol https
---latest 15
---sort rate
-EOF
-
-systemctl enable NetworkManager.service systemd-timesyncd.service \
-                 reflector.timer paccache.timer smartd.service \
-                 scx_loader.service ratbagd.service ckb-next-daemon.service \
-                 ly@tty2.service
-systemctl disable getty@tty2.service
-
-getent group gamemode &amp;&amp; usermod -aG gamemode &quot;$USERNAME&quot;
-</code></pre></div>
+<ul>
+<li>sched-ext: <a href="files/etc/scx_loader.toml"><code>files/etc/scx_loader.toml</code></a> starts <code>scx_bpfland</code> in <em>Gaming</em> mode.</li>
+<li>reflector refreshes the mirrors weekly using <code>MIRROR_COUNTRIES</code>.</li>
+<li>Enabled: NetworkManager, time sync, reflector and paccache timers, <code>smartd</code> (disk health), <code>scx_loader</code>, the <code>ly</code> login screen on tty2, and the optional services (<code>ckb-next-daemon</code>, <code>ratbagd</code>, <code>bluetooth</code>).</li>
+<li>Your user joins the <code>gamemode</code> group.</li>
+</ul>
 <h3 id="58-leave-and-reboot" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="58-leave-and-reboot"><span class="box"></span></label><span class="h-text">5.8 Leave and reboot</span></h3>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">exit
-umount -R /mnt
-reboot      # remove the USB stick
-</code></pre></div>
-<p>In the Limine menu pick <strong>linux-cachyos</strong>. At the <code>ly</code> login, choose the session <strong>Hyprland (uwsm-managed)</strong>. On first start Hyprland generates a default <code>hyprland.lua</code>, where <code>SUPER+Q</code> opens kitty. Open this guide in Firefox and continue there.</p>
+<p><code>install.sh</code> offers to unmount and reboot; remove the USB stick when the screen goes dark.</p>
+<p>In the Limine menu pick your <code>KERNEL</code>. At the <code>ly</code> login choose the session <strong>Hyprland (uwsm-managed)</strong>. On first start Hyprland creates a default config where <strong><code>SUPER+Q</code> opens a terminal</strong> (kitty).</p>
 <hr />
 <h2 id="6-first-boot-quick-checks" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="6-first-boot-quick-checks"><span class="box"></span></label><span class="h-text">6. First boot: quick checks</span></h2>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">nvidia-smi                                         # driver 615.x, RTX 3070
-cat /sys/module/nvidia_drm/parameters/modeset      # Y
-cat /sys/devices/system/cpu/amd_pstate/status      # active
-scxctl get                                         # bpfland, Gaming
-swapon --show                                      # /dev/zram0
-systemctl --failed                                 # should be empty
+<p><strong>On Wi-Fi?</strong> The live USB's connection doesn't carry over. In the terminal, run <code>nmtui</code> → <em>Activate a connection</em>.</p>
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">uname -r                          # contains &quot;cachyos&quot;
+scxctl get                        # bpfland, Gaming
+swapon --show                     # /dev/zram0
+systemctl --failed                # should be empty
 </code></pre></div>
+<p>Graphics, depending on <code>GPU_DRIVER</code>:</p>
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">nvidia-smi                                         # NVIDIA: driver version and your card
+cat /sys/module/nvidia_drm/parameters/modeset      # NVIDIA: Y
+lsmod | grep -E '^(amdgpu|i915|xe) '               # AMD / Intel: driver loaded
+</code></pre></div>
+<p>CPU frequency driver: <code>cat /sys/devices/system/cpu/amd_pstate/status</code> → <code>active</code> (AMD), or <code>cat /sys/devices/system/cpu/cpufreq/policy0/scaling_driver</code> → <code>intel_pstate</code> (Intel).</p>
+<p>Then run <code>~/arch-setup/post-install.sh</code> (sections 7–9).</p>
 <hr />
 <h2 id="7-bootable-snapshots-snapper-limine" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="7-bootable-snapshots-snapper-limine"><span class="box"></span></label><span class="h-text">7. Bootable snapshots (snapper + Limine)</span></h2>
-<p>Every <code>pacman</code> transaction takes a pre/post snapshot (<code>snap-pac</code>). <code>limine-snapper-sync</code> adds each one to the Limine boot menu, so a broken update is one reboot away from being undone.</p>
+<p>Every <code>pacman</code> transaction takes a pre/post snapshot (<code>snap-pac</code>). <code>limine-snapper-sync</code> adds each one to the Limine boot menu, so a broken update is one reboot away from being undone. This is the closest thing to Windows' System Restore, and it works when the system doesn't boot.</p>
 <div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">sudo pacman -S snapper snap-pac limine-snapper-sync btrfs-assistant
-sudo snapper -c root create-config /                    # creates /.snapshots inside @ (tool default: /@/.snapshots)
+sudo snapper -c root create-config /
 sudo snapper -c root set-config TIMELINE_CREATE=no NUMBER_LIMIT=10 NUMBER_LIMIT_IMPORTANT=5
 sudo systemctl enable --now limine-snapper-sync.service snapper-cleanup.timer
-
 sudo snapper -c root create -d &quot;fresh install&quot;
 limine-list                                             # a &quot;Snapshots&quot; submenu should now exist
 </code></pre></div>
@@ -641,646 +867,358 @@ limine-list                                             # a &quot;Snapshots&quot
 1. Reboot and open <em>Snapshots</em> in the Limine menu, then boot the last good snapshot. It runs read-only with an overlay.
 2. Run <code>sudo limine-snapper-restore</code>.
 3. Reboot.</p>
-<p><code>btrfs-assistant</code> gives you a GUI for the same operations.</p>
-<p><code>/home</code> is not snapshotted. Snapshots are not backups either; see section 13.</p>
+<p><code>btrfs-assistant</code> gives you a GUI for the same operations. <code>/home</code> is not snapshotted, and snapshots are not backups (section 15).</p>
 <hr />
 <h2 id="8-hyprland" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="8-hyprland"><span class="box"></span></label><span class="h-text">8. Hyprland</span></h2>
 <h3 id="81-session-environment-configuwsmenv" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="81-session-environment-configuwsmenv"><span class="box"></span></label><span class="h-text">8.1 Session environment (<code>~/.config/uwsm/env</code>)</span></h3>
-<p>uwsm exports these to the whole session, including systemd user services. Per the Hyprland wiki, env vars go here, not in <code>hyprland.lua</code>.</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">mkdir -p ~/.config/uwsm
-cat &gt; ~/.config/uwsm/env &lt;&lt;'EOF'
-export XCURSOR_SIZE=24
-# NVIDIA
-export LIBVA_DRIVER_NAME=nvidia
-export __GLX_VENDOR_LIBRARY_NAME=nvidia
-export NVD_BACKEND=direct
-# Keep NVIDIA's shader cache instead of pruning it at 1 GB (fewer re-compiles / stutters)
-export __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1
-# Toolkits: prefer Wayland, fall back to X11
-export ELECTRON_OZONE_PLATFORM_HINT=auto
-export QT_QPA_PLATFORM=&quot;wayland;xcb&quot;
-export GDK_BACKEND=&quot;wayland,x11,*&quot;
-EOF
-
-cat &gt; ~/.config/uwsm/env-hyprland &lt;&lt;'EOF'
-export HYPRCURSOR_SIZE=24
-EOF
-</code></pre></div>
+<p>uwsm exports these to the whole session, including user services. Per the Hyprland wiki, environment variables go here, not in <code>hyprland.lua</code>.</p>
+<ul>
+<li>Always (<a href="files/home/.config/uwsm/env"><code>files/home/.config/uwsm/env</code></a>): cursor size, and Wayland first with X11 fallback for Electron, Qt and GTK apps.</li>
+<li>NVIDIA only (<a href="files/home/.config/uwsm/env-nvidia"><code>env-nvidia</code></a>, appended by <code>post-install.sh</code>): the NVIDIA VA-API and GLX vendor, the direct NVDEC backend, and keeping NVIDIA's shader cache beyond 1 GB (fewer shader recompiles and stutters).</li>
+</ul>
 <p>Do <strong>not</strong> set <code>SDL_VIDEODRIVER=wayland</code> globally. It breaks games that bundle older SDL builds.</p>
 <h3 id="82-confighyprhyprlandlua" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="82-confighyprhyprlandlua"><span class="box"></span></label><span class="h-text">8.2 <code>~/.config/hypr/hyprland.lua</code></span></h3>
-<p><strong>Monitor ports:</strong> the SuperFrame is on the card's only HDMI port, so it's <code>HDMI-A-1</code>. The LG's name depends on which of the RTX 3070's three DisplayPorts it's plugged into (<code>DP-1</code>, <code>DP-2</code> or <code>DP-3</code>). Run <code>hyprctl monitors all</code> and set <code>MAIN</code> to match. Hyprland shows config errors in a banner at the top of the screen.</p>
-<p>If <code>availableModes</code> for <code>HDMI-A-1</code> doesn't list a 144 Hz mode, set <code>SIDE</code>'s <code>mode</code> to the highest one listed. Your HWiNFO capture only showed modes up to 75 Hz on this connection, but that list doesn't always include the monitor's high-refresh modes.</p>
-<div class="code"><div class="code-bar"><span>lua</span><button type="button" class="copy">Copy</button></div><pre><code class="language-lua">-- Hyprland 0.56 Lua config. Environment variables live in ~/.config/uwsm/env.
-
-----------------------------------------------------------------------
--- Monitors   (verify port names with: hyprctl monitors all)
-----------------------------------------------------------------------
-local MAIN = &quot;DP-1&quot;       -- LG UltraWide 2560x1080 @ 144 Hz, DisplayPort (check DP-1/2/3)
-local SIDE = &quot;HDMI-A-1&quot;   -- SuperFrame Ace 27&quot; 1920x1080 @ 144 Hz, HDMI
-
--- vrr = 2: VRR only for fullscreen apps (avoids NVIDIA desktop flicker)
--- vrr = 0 on HDMI: NVIDIA has no VRR over HDMI without HDMI 2.1 VRR
-hl.monitor({ output = SIDE, mode = &quot;1920x1080@144&quot;, position = &quot;0x0&quot;,    scale = 1, vrr = 0 })
-hl.monitor({ output = MAIN, mode = &quot;2560x1080@144&quot;, position = &quot;1920x0&quot;, scale = 1, vrr = 2 })
-hl.monitor({ output = &quot;&quot;,   mode = &quot;preferred&quot;,     position = &quot;auto&quot;,   scale = 1 })
-
-hl.workspace_rule({ workspace = &quot;1&quot;, monitor = MAIN, default = true })  -- games, editor
-hl.workspace_rule({ workspace = &quot;2&quot;, monitor = MAIN })                  -- browser
-hl.workspace_rule({ workspace = &quot;3&quot;, monitor = SIDE, default = true })  -- docs, Discord, terminal
-
-----------------------------------------------------------------------
--- Programs
-----------------------------------------------------------------------
-local terminal    = &quot;kitty&quot;
-local fileManager = &quot;thunar&quot;
-local menu        = &quot;rofi -show drun&quot;
-
--- Launch apps as systemd units inside the uwsm session
-local function app(cmd) return hl.dsp.exec_cmd(&quot;uwsm app -- &quot; .. cmd) end
-
-----------------------------------------------------------------------
--- Autostart   (waybar, swaync, hypridle run as user services, see 8.3)
-----------------------------------------------------------------------
-hl.on(&quot;hyprland.start&quot;, function()
-    hl.exec_cmd(&quot;systemctl --user start hyprpolkitagent.service&quot;)
-    hl.exec_cmd(&quot;uwsm app -- awww-daemon&quot;)
-    hl.exec_cmd(&quot;uwsm app -- wl-paste --watch cliphist store&quot;)
-    hl.exec_cmd(&quot;uwsm app -- ckb-next --background&quot;)
-    hl.exec_cmd(&quot;sh -c 'sleep 1; if [ -f \&quot;$HOME/Pictures/wallpaper.jpg\&quot; ]; then awww img \&quot;$HOME/Pictures/wallpaper.jpg\&quot;; else awww img /usr/share/hypr/wall0.png; fi'&quot;)
-end)
-
-----------------------------------------------------------------------
--- Look and feel
-----------------------------------------------------------------------
-hl.config({
-    general = {
-        gaps_in     = 5,
-        gaps_out    = 10,
-        border_size = 2,
-        col = {
-            active_border   = { colors = { &quot;rgba(33ccffee)&quot;, &quot;rgba(00ff99ee)&quot; }, angle = 45 },
-            inactive_border = &quot;rgba(595959aa)&quot;,
-        },
-        layout        = &quot;dwindle&quot;,
-        allow_tearing = true,   -- master switch; games opt in with the `immediate` rule below
-    },
-
-    decoration = {
-        rounding           = 10,
-        active_opacity     = 0.95,
-        inactive_opacity   = 0.85,
-        fullscreen_opacity = 1.0,
-
-        shadow = {
-            enabled      = true,
-            range        = 15,
-            render_power = 3,
-            color        = 0xee1a1a1a,
-        },
-
-        blur = {
-            enabled           = true,
-            size              = 6,
-            passes            = 3,
-            new_optimizations = true,
-            ignore_opacity    = true,
-        },
-    },
-
-    animations = { enabled = true },
-
-    render = {
-        direct_scanout = 2,     -- auto: fullscreen games bypass composition. Set 0 if fullscreen flickers.
-    },
-
-    misc = {
-        force_default_wallpaper = 0,
-        disable_hyprland_logo   = true,
-        disable_splash_rendering = true,
-        vrr                     = 0,    -- per-monitor vrr above takes over
-    },
-
-    input = {
-        kb_layout          = &quot;us&quot;,      -- &quot;br&quot; for ABNT2
-        numlock_by_default = true,
-        follow_mouse       = 1,
-        sensitivity        = 0,
-        accel_profile      = &quot;flat&quot;,    -- raw 1:1 mouse input for the G502
-    },
-
-    dwindle = { preserve_split = true },
-})
-
-hl.curve(&quot;overshot&quot;,  { type = &quot;bezier&quot;, points = { {0.05, 0.9}, {0.1, 1.05} } })
-hl.curve(&quot;smoothOut&quot;, { type = &quot;bezier&quot;, points = { {0.36, 0},   {0.66, -0.56} } })
-hl.curve(&quot;smoothIn&quot;,  { type = &quot;bezier&quot;, points = { {0.25, 1},   {0.5, 1} } })
-
-hl.animation({ leaf = &quot;windows&quot;,    enabled = true, speed = 4,  bezier = &quot;overshot&quot;,  style = &quot;slide&quot; })
-hl.animation({ leaf = &quot;windowsOut&quot;, enabled = true, speed = 4,  bezier = &quot;smoothOut&quot;, style = &quot;slide&quot; })
-hl.animation({ leaf = &quot;border&quot;,     enabled = true, speed = 10, bezier = &quot;default&quot; })
-hl.animation({ leaf = &quot;fade&quot;,       enabled = true, speed = 5,  bezier = &quot;smoothIn&quot; })
-hl.animation({ leaf = &quot;workspaces&quot;, enabled = true, speed = 5,  bezier = &quot;overshot&quot;,  style = &quot;slidevert&quot; })
-
-----------------------------------------------------------------------
--- Keybinds
-----------------------------------------------------------------------
-local mod = &quot;SUPER&quot;
-
-hl.bind(mod .. &quot; + Return&quot;,      app(terminal))
-hl.bind(mod .. &quot; + D&quot;,           app(menu))
-hl.bind(mod .. &quot; + E&quot;,           app(fileManager))
-hl.bind(mod .. &quot; + Q&quot;,           hl.dsp.window.close())
-hl.bind(mod .. &quot; + F&quot;,           hl.dsp.window.fullscreen())
-hl.bind(mod .. &quot; + V&quot;,           hl.dsp.window.float({ action = &quot;toggle&quot; }))
-hl.bind(mod .. &quot; + P&quot;,           hl.dsp.window.pseudo())
-hl.bind(mod .. &quot; + L&quot;,           hl.dsp.exec_cmd(&quot;loginctl lock-session&quot;))
-hl.bind(mod .. &quot; + SHIFT + E&quot;,   hl.dsp.exec_cmd(&quot;uwsm stop&quot;))       -- clean logout (don't use hl.dsp.exit with uwsm)
-hl.bind(mod .. &quot; + SHIFT + V&quot;,   hl.dsp.exec_cmd(&quot;cliphist list | rofi -dmenu | cliphist decode | wl-copy&quot;))
-hl.bind(&quot;Print&quot;,                 hl.dsp.exec_cmd('grim -g &quot;$(slurp)&quot; - | wl-copy'))
-hl.bind(&quot;SHIFT + Print&quot;,         hl.dsp.exec_cmd('grim - | wl-copy'))
-
-hl.bind(mod .. &quot; + left&quot;,  hl.dsp.focus({ direction = &quot;left&quot; }))
-hl.bind(mod .. &quot; + right&quot;, hl.dsp.focus({ direction = &quot;right&quot; }))
-hl.bind(mod .. &quot; + up&quot;,    hl.dsp.focus({ direction = &quot;up&quot; }))
-hl.bind(mod .. &quot; + down&quot;,  hl.dsp.focus({ direction = &quot;down&quot; }))
-
-for i = 1, 10 do
-    local key = i % 10
-    hl.bind(mod .. &quot; + &quot; .. key,         hl.dsp.focus({ workspace = i }))
-    hl.bind(mod .. &quot; + SHIFT + &quot; .. key, hl.dsp.window.move({ workspace = i }))
-end
-
-hl.bind(mod .. &quot; + S&quot;,         hl.dsp.workspace.toggle_special(&quot;magic&quot;))
-hl.bind(mod .. &quot; + SHIFT + S&quot;, hl.dsp.window.move({ workspace = &quot;special:magic&quot; }))
-
-hl.bind(mod .. &quot; + mouse:272&quot;, hl.dsp.window.drag(),   { mouse = true })
-hl.bind(mod .. &quot; + mouse:273&quot;, hl.dsp.window.resize(), { mouse = true })
-
--- K95 media keys / volume wheel
-hl.bind(&quot;XF86AudioRaiseVolume&quot;, hl.dsp.exec_cmd(&quot;wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+&quot;), { locked = true, repeating = true })
-hl.bind(&quot;XF86AudioLowerVolume&quot;, hl.dsp.exec_cmd(&quot;wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-&quot;),      { locked = true, repeating = true })
-hl.bind(&quot;XF86AudioMute&quot;,        hl.dsp.exec_cmd(&quot;wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle&quot;),     { locked = true })
-hl.bind(&quot;XF86AudioPlay&quot;,        hl.dsp.exec_cmd(&quot;playerctl play-pause&quot;), { locked = true })
-hl.bind(&quot;XF86AudioNext&quot;,        hl.dsp.exec_cmd(&quot;playerctl next&quot;),       { locked = true })
-hl.bind(&quot;XF86AudioPrev&quot;,        hl.dsp.exec_cmd(&quot;playerctl previous&quot;),   { locked = true })
-
-----------------------------------------------------------------------
--- Window rules
-----------------------------------------------------------------------
--- Black Desert (Wine/Proton via Lutris). Verify the class with: hyprctl clients
-hl.window_rule({
-    name      = &quot;black-desert&quot;,
-    match     = { class = &quot;(?i)^blackdesert64\\.exe$&quot; },
-    immediate = true,   -- allow tearing (lowest input latency) when fullscreen
-    opaque    = true,
-})
-
--- Steam games run as XWayland windows with class steam_app_&lt;appid&gt;
-hl.window_rule({
-    name      = &quot;steam-games&quot;,
-    match     = { class = &quot;^steam_app_[0-9]+$&quot; },
-    immediate = true,
-    opaque    = true,
-})
-
--- Never lock or blank the screen while something is fullscreen (games, video)
-hl.window_rule({
-    name         = &quot;idle-inhibit-fullscreen&quot;,
-    match        = { class = &quot;.*&quot; },
-    idle_inhibit = &quot;fullscreen&quot;,
-})
-
-hl.window_rule({
-    name           = &quot;suppress-maximize-events&quot;,
-    match          = { class = &quot;.*&quot; },
-    suppress_event = &quot;maximize&quot;,
-})
-
-hl.window_rule({
-    name     = &quot;fix-xwayland-drags&quot;,
-    match    = { class = &quot;^$&quot;, title = &quot;^$&quot;, xwayland = true, float = true, fullscreen = false, pin = false },
-    no_focus = true,
-})
-</code></pre></div>
+<p>The template is <a href="files/home/.config/hypr/hyprland.lua"><code>files/home/.config/hypr/hyprland.lua</code></a>. <code>post-install.sh</code> fills in, from <code>config.sh</code>:
+- <strong>Monitors:</strong> each <code>MONITORS</code> entry is matched against <code>hyprctl monitors all</code> (by name or port) and written as <code>hl.monitor(...)</code> lines, with workspaces 1–2 on the main monitor and 3 on the second. A monitor it can't find is reported and left on automatic settings.
+- <strong>Keyboard:</strong> <code>KB_LAYOUT</code> and <code>KB_VARIANT</code>.
+- <strong>ckb-next autostart:</strong> only with <code>CORSAIR_KEYBOARD=yes</code>.</p>
+<p>Hyprland reports config errors in a banner at the top of the screen. To change monitors later, edit <code>MONITORS</code> and rerun <code>post-install.sh</code> (it backs up the old file), or edit the generated block in <code>hyprland.lua</code> directly.</p>
+<p>Keys, for anyone used to Windows (<code>SUPER</code> is the Windows key):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Keys</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SUPER+Return</code></td>
+<td>Terminal</td>
+</tr>
+<tr>
+<td><code>SUPER+D</code></td>
+<td>App launcher (like the Start menu search)</td>
+</tr>
+<tr>
+<td><code>SUPER+E</code></td>
+<td>File manager</td>
+</tr>
+<tr>
+<td><code>SUPER+Q</code></td>
+<td>Close window</td>
+</tr>
+<tr>
+<td><code>SUPER+F</code> / <code>SUPER+V</code></td>
+<td>Fullscreen / toggle floating</td>
+</tr>
+<tr>
+<td><code>SUPER+1…0</code>, <code>SUPER+SHIFT+1…0</code></td>
+<td>Go to workspace / move window to workspace</td>
+</tr>
+<tr>
+<td><code>SUPER+arrows</code></td>
+<td>Move focus</td>
+</tr>
+<tr>
+<td><code>SUPER+mouse drag</code> (left / right button)</td>
+<td>Move / resize window</td>
+</tr>
+<tr>
+<td><code>SUPER+S</code></td>
+<td>Scratchpad workspace</td>
+</tr>
+<tr>
+<td><code>SUPER+L</code></td>
+<td>Lock</td>
+</tr>
+<tr>
+<td><code>SUPER+SHIFT+V</code></td>
+<td>Clipboard history</td>
+</tr>
+<tr>
+<td><code>Print</code> / <code>SHIFT+Print</code></td>
+<td>Screenshot of a region / the whole screen, to the clipboard</td>
+</tr>
+<tr>
+<td><code>SUPER+SHIFT+E</code></td>
+<td>Log out</td>
+</tr>
+</tbody>
+</table></div>
 <p>Notes on tearing and VRR:
-- Tearing only happens when the game is fullscreen <strong>and</strong> nothing else is visible on that monitor. <code>hyprctl monitors</code> shows <code>tearingBlockedBy</code> if it's being blocked.
-- On the LG, inside its VRR range (50–144 fps), VRR handles frame pacing, and tearing only matters above 144 fps. Play on the LG; the SuperFrame has no VRR over HDMI.</p>
+- <code>allow_tearing</code> is on, and Steam games (plus the example rule for a game outside Steam) opt in with the <code>immediate</code> window rule for the lowest input latency. Tearing only happens when the game is fullscreen <strong>and</strong> nothing else is visible on that monitor; <code>hyprctl monitors</code> shows <code>tearingBlockedBy</code> if it's blocked.
+- Inside a monitor's VRR range, VRR handles frame pacing; tearing only matters above the maximum refresh rate. Play on a VRR-capable monitor.
+- To add a rule for another game, find its window class with <code>hyprctl clients</code> and copy the <code>black-desert</code> rule.</p>
 <h3 id="83-session-services-idle-lock-bar" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="83-session-services-idle-lock-bar"><span class="box"></span></label><span class="h-text">8.3 Session services, idle, lock, bar</span></h3>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash"># Run as systemd user services, started by the uwsm session
-systemctl --user add-wants graphical-session.target \
-    waybar.service swaync.service hypridle.service hyprpolkitagent.service
-
-cp /usr/share/hypr/hyprlock.conf ~/.config/hypr/hyprlock.conf
-
-cat &gt; ~/.config/hypr/hypridle.conf &lt;&lt;'EOF'
-general {
-    lock_cmd = pidof hyprlock || hyprlock
-    before_sleep_cmd = loginctl lock-session
-    after_sleep_cmd = hyprctl dispatch 'hl.dsp.dpms({action = &quot;on&quot;})'
-}
-
-listener {
-    timeout = 600
-    on-timeout = loginctl lock-session
-}
-
-listener {
-    timeout = 900
-    on-timeout = hyprctl dispatch 'hl.dsp.dpms({action = &quot;off&quot;})'
-    on-resume = hyprctl dispatch 'hl.dsp.dpms({action = &quot;on&quot;})'
-}
-EOF
-
-mkdir -p ~/.config/waybar ~/Pictures
-cat &gt; ~/.config/waybar/config.jsonc &lt;&lt;'EOF'
-{
-  &quot;layer&quot;: &quot;top&quot;,
-  &quot;height&quot;: 30,
-  &quot;modules-left&quot;: [&quot;hyprland/workspaces&quot;],
-  &quot;modules-center&quot;: [&quot;clock&quot;],
-  &quot;modules-right&quot;: [&quot;tray&quot;, &quot;pulseaudio&quot;, &quot;cpu&quot;, &quot;temperature&quot;, &quot;memory&quot;, &quot;network&quot;],
-  &quot;clock&quot;: { &quot;format&quot;: &quot;{:%a %d %b  %H:%M}&quot; },
-  &quot;pulseaudio&quot;: { &quot;format&quot;: &quot;{volume}% {icon}&quot;, &quot;format-icons&quot;: { &quot;default&quot;: [&quot;&quot;, &quot;&quot;, &quot;&quot;] }, &quot;on-click&quot;: &quot;pavucontrol&quot; },
-  &quot;cpu&quot;: { &quot;format&quot;: &quot;{usage}% {avg_frequency:.2f} GHz&quot; },
-  &quot;temperature&quot;: { &quot;hwmon-path-abs&quot;: &quot;/sys/devices/pci0000:00/0000:00:18.3/hwmon&quot;, &quot;input-filename&quot;: &quot;temp1_input&quot;, &quot;format&quot;: &quot;CPU {temperatureC}°C&quot; },
-  &quot;memory&quot;: { &quot;format&quot;: &quot;{used:0.1f}G &quot; },
-  &quot;network&quot;: { &quot;format-ethernet&quot;: &quot;{ipaddr} &quot;, &quot;format-disconnected&quot;: &quot;offline ⚠&quot; }
-}
-EOF
-
-xdg-user-dirs-update
-</code></pre></div>
-<p>The bundled Hyprland wallpaper is used until you put a custom image at <code>~/Pictures/wallpaper.jpg</code>. At the <code>ly</code> login, select <strong>Hyprland (uwsm-managed)</strong> so <code>graphical-session.target</code> starts Waybar and the other user services. For an existing installation, run <code>python3 repair-desktop.py</code> from this repository to preserve local monitor and keyboard settings while applying the wallpaper and Waybar fixes.</p>
+<ul>
+<li>Waybar, swaync, hypridle and the polkit agent run as systemd user services in the uwsm session.</li>
+<li><a href="files/home/.config/hypr/hypridle.conf"><code>hypridle.conf</code></a>: lock after 10 minutes, screen off after 15; never while something is fullscreen.</li>
+<li><strong>Waybar</strong> (<a href="files/home/.config/waybar/config.jsonc"><code>config.jsonc</code></a>, <a href="files/home/.config/waybar/style.css"><code>style.css</code></a>): floating pills in the Hyprland colours. <code>post-install.sh</code> adapts it to your hardware:</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Shows</th>
+<th>Hardware</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cpu</code>, <code>memory</code>, <code>pulseaudio</code>, <code>network</code></td>
+<td>Load and clock, RAM, volume, IP or Wi-Fi network</td>
+<td>All</td>
+</tr>
+<tr>
+<td><code>temperature</code></td>
+<td>CPU temperature</td>
+<td>Sensor found automatically (<code>k10temp</code> on AMD, <code>coretemp</code> on Intel)</td>
+</tr>
+<tr>
+<td><code>custom/gpu</code></td>
+<td>GPU load, VRAM, temperature; clocks in the tooltip</td>
+<td>NVIDIA (one resident <code>nvidia-smi</code>) and AMD (sysfs); not on Intel</td>
+</tr>
+<tr>
+<td><code>custom/cpu_voltage</code></td>
+<td>Core voltage</td>
+<td><code>UNDERVOLT=yes</code> (Ryzen 5000 via <code>ryzen_smu</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p>CPU load, temperature and GPU temperature turn amber, then red, when busy or hot. The GPU stats come from one background service (<code>gpu-stats.service</code>) shared by every monitor's bar.</p>
+<p>The bundled Hyprland wallpaper is used until you put an image at <code>~/Pictures/wallpaper.jpg</code>.</p>
 <hr />
-<h2 id="9-audio-pipewire-logitech-g-pro-x-wired" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="9-audio-pipewire-logitech-g-pro-x-wired"><span class="box"></span></label><span class="h-text">9. Audio: PipeWire + Logitech G PRO X (wired)</span></h2>
-<p>The PRO X is connected through the motherboard's 3.5 mm analog jacks. PipeWire sees the onboard analog codec, not the headset model. Its output and microphone appear as separate analog sink and source nodes. HeadsetControl requires the USB DAC and cannot control sidetone on this analog connection.</p>
+<h2 id="9-audio-pipewire" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="9-audio-pipewire"><span class="box"></span></label><span class="h-text">9. Audio: PipeWire</span></h2>
 <h3 id="91-lower-latency-fewer-resampling-cases" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="91-lower-latency-fewer-resampling-cases"><span class="box"></span></label><span class="h-text">9.1 Lower latency, fewer resampling cases</span></h3>
-<p>The default quantum is 1024/48000 (about 21 ms). 512 (about 10.7 ms) is a safe step down. Apps that ask for less, such as games and voice apps, can go as low as 64.</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">mkdir -p ~/.config/pipewire/pipewire.conf.d
-cat &gt; ~/.config/pipewire/pipewire.conf.d/10-latency.conf &lt;&lt;'EOF'
-context.properties = {
-    default.clock.rate          = 48000
-    default.clock.allowed-rates = [ 44100 48000 ]
-    default.clock.quantum       = 512
-    default.clock.min-quantum   = 64
-    default.clock.max-quantum   = 2048
-}
-EOF
-</code></pre></div>
-<p><code>allowed-rates</code> lets 44.1 kHz music play without resampling when the DAC supports it.</p>
+<p><a href="files/home/.config/pipewire/pipewire.conf.d/10-latency.conf"><code>10-latency.conf</code></a>: the default quantum drops from 1024/48000 (about 21 ms) to 512 (about 10.7 ms). Apps that ask for less, such as games and voice chat, can go down to 64. <code>allowed-rates</code> lets 44.1 kHz music play without resampling when the hardware supports it.</p>
 <h3 id="92-wireplumber-rules" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="92-wireplumber-rules"><span class="box"></span></label><span class="h-text">9.2 WirePlumber rules</span></h3>
-<p>Hide the NVIDIA HDMI/DP audio device so the SuperFrame's HDMI audio does not become the default output. Remove this rule if you ever want sound through the monitor.</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash"># Check the real names first:
-pw-cli ls Node   | grep node.name    # look for the onboard analog output and input
-pw-cli ls Device | grep device.name  # find the GPU audio card to hide
-
-mkdir -p ~/.config/wireplumber/wireplumber.conf.d
-cat &gt; ~/.config/wireplumber/wireplumber.conf.d/51-devices.conf &lt;&lt;'EOF'
-monitor.alsa.rules = [
-  {
-    matches = [ { device.name = &quot;alsa_card.pci-0000_07_00.1&quot; } ]
-    actions = { update-props = { device.disabled = true } }
-  }
-]
-EOF
-
-systemctl --user restart pipewire pipewire-pulse wireplumber
-pw-metadata -n settings | grep clock.quantum      # 512
-wpctl status                                      # analog sink and source present, NVIDIA HDMI gone
+<p>With <code>HIDE_GPU_AUDIO=yes</code>, <code>post-install.sh</code> hides the HDMI/DP audio output of NVIDIA and AMD graphics cards, so a monitor without speakers can't become the default output. (Intel's HDMI audio shares the motherboard's audio device and can't be hidden separately.) Set <code>HIDE_GPU_AUDIO=no</code> and rerun <code>post-install.sh</code> if you use your monitor's speakers.</p>
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">wpctl status                            # sinks (outputs) and sources (inputs); * marks the defaults
+wpctl set-default &lt;id&gt;                  # change the default output or input
+pw-metadata -n settings | grep quantum  # 512
 </code></pre></div>
-<h3 id="93-blue-voce-and-eq-replacement-easyeffects" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="93-blue-voce-and-eq-replacement-easyeffects"><span class="box"></span></label><span class="h-text">9.3 Blue VO!CE and EQ replacement: EasyEffects</span></h3>
-<ol>
-<li>Open EasyEffects. Under <strong>Input</strong> (the mic), add these in order:
-   - <strong>Noise Reduction</strong> (RNNoise): removes keyboard and fan noise.
-   - <strong>Gate</strong>
-   - <strong>Compressor</strong>
-   - <strong>Limiter</strong></li>
-<li>Under <strong>Output</strong>, add an <strong>Equalizer</strong> and re-enter your G HUB EQ curve. Alternatively, import an AutoEq preset for the G PRO X.</li>
-<li>In EasyEffects settings, enable <strong>Launch at startup</strong>. uwsm handles XDG autostart.</li>
-</ol>
-<p>G HUB's DTS:X virtual 7.1 has no Linux equivalent.</p>
-<h3 id="94-sidetone-headsetcontrol" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="94-sidetone-headsetcontrol"><span class="box"></span></label><span class="h-text">9.4 Sidetone (HeadsetControl)</span></h3>
-<p>If you switch to the PRO X USB DAC, <code>headsetcontrol</code> supports it (USB ID <code>046d:0aaa</code>). The package installs udev rules, so no root is needed. These commands do not apply to the 3.5 mm connection.</p>
+<h3 id="93-easyeffects-mic-processing-and-eq" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="93-easyeffects-mic-processing-and-eq"><span class="box"></span></label><span class="h-text">9.3 EasyEffects: mic processing and EQ</span></h3>
+<p>EasyEffects replaces G HUB's EQ, Blue VO!CE and NVIDIA Broadcast:
+1. Under <strong>Input</strong> (the mic), add in order: <strong>Noise Reduction</strong> (RNNoise: keyboard and fan noise), <strong>Gate</strong>, <strong>Compressor</strong>, <strong>Limiter</strong>.
+2. Under <strong>Output</strong>, add an <strong>Equalizer</strong> and re-enter your EQ, or import an AutoEq preset for your headphones.
+3. In EasyEffects' settings, enable <strong>Launch at startup</strong>. uwsm handles XDG autostart.</p>
+<p>Windows-only virtual surround (DTS:X, Dolby Atmos for Headphones) has no Linux equivalent.</p>
+<h3 id="94-headset-sidetone-and-discord" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="94-headset-sidetone-and-discord"><span class="box"></span></label><span class="h-text">9.4 Headset sidetone and Discord</span></h3>
+<p>With <code>HEADSETCONTROL=yes</code>, <code>headsetcontrol</code> controls sidetone, battery and lights on supported USB/wireless gaming headsets (list: <a href="https://github.com/Sapd/HeadsetControl#supported-headsets" target="_blank" rel="noopener">https://github.com/Sapd/HeadsetControl#supported-headsets</a>). It doesn't work through 3.5 mm jacks.</p>
 <div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">headsetcontrol -s 64      # sidetone 0–128
-headsetcontrol -?         # all supported features for your device
+headsetcontrol -?         # features of your headset
 </code></pre></div>
-<p>If Discord crackles, it's asking for too small a buffer. Raise its minimum:</p>
+<p>If Discord crackles, it's asking for too small a buffer. <a href="files/optional/20-discord.conf"><code>files/optional/20-discord.conf</code></a> raises its minimum:</p>
 <div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">mkdir -p ~/.config/pipewire/pipewire-pulse.conf.d
-cat &gt; ~/.config/pipewire/pipewire-pulse.conf.d/20-discord.conf &lt;&lt;'EOF'
-pulse.rules = [
-  {
-    matches = [ { application.process.binary = &quot;Discord&quot; } ]
-    actions = { update-props = { pulse.min.quantum = 1024/48000 } }
-  }
-]
-EOF
+cp ~/arch-setup/files/optional/20-discord.conf ~/.config/pipewire/pipewire-pulse.conf.d/
 systemctl --user restart pipewire-pulse
 </code></pre></div>
 <hr />
 <h2 id="10-mouse-keyboard" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="10-mouse-keyboard"><span class="box"></span></label><span class="h-text">10. Mouse &amp; keyboard</span></h2>
 <ul>
-<li><strong>G502 HERO</strong>: open <strong>Piper</strong> to set DPI steps, report rate (1000 Hz), buttons and onboard profiles. <code>ratbagd</code> is already enabled. Your G HUB onboard profile also keeps working without Piper.</li>
-<li><strong>K95 RGB Platinum</strong>: open <strong>ckb-next</strong> for lighting, G-key macros and hardware profiles. The daemon is enabled and the tray app autostarts from <code>hyprland.lua</code>.</li>
+<li><strong>Gaming mice</strong> (<code>GAMING_MOUSE=yes</code>): open <strong>Piper</strong> for DPI steps, report rate, buttons and onboard profiles (<code>ratbagd</code> is enabled). Supported devices: <a href="https://github.com/libratbag/libratbag/tree/master/data/devices" target="_blank" rel="noopener">https://github.com/libratbag/libratbag/tree/master/data/devices</a>. A mouse whose profile is saved on-board (section 1) works the same without Piper.</li>
+<li><strong>Corsair keyboards and mice</strong> (<code>CORSAIR_KEYBOARD=yes</code>): <strong>ckb-next</strong> for lighting, macros and hardware profiles. Its daemon is enabled and the tray app starts with Hyprland.</li>
+<li>Mouse acceleration is off (<code>accel_profile = "flat"</code>), like most games expect.</li>
 </ul>
 <hr />
-<h2 id="11-per-core-curve-optimizer-systemd-service" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="11-per-core-curve-optimizer-systemd-service"><span class="box"></span></label><span class="h-text">11. Per-core Curve Optimizer (systemd service)</span></h2>
-<p>The B450M DS3H V2 BIOS doesn't expose Curve Optimizer for the 5800X3D, so the offsets are written at runtime to the CPU's SMU through the <code>ryzen_smu</code> kernel driver. That's the same thing PBO2 Tuner does on Windows.</p>
-<p>The offsets <strong>reset on every power cycle</strong>. A boot service and a resume service re-apply them.</p>
-<blockquote>
-<p><code>ryzenadj</code> cannot do this. It doesn't support desktop Vermeer CPUs and has no per-core CO flag for them.</p>
-</blockquote>
-<h3 id="111-driver-aur" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="111-driver-aur"><span class="box"></span></label><span class="h-text">11.1 Driver (AUR)</span></h3>
-<p><code>ryzen_smu-dkms-git</code> is the only AUR package this build needs. Arch has an open AUR malware incident (Arch news, 2026-06-12), so <strong>read the PKGBUILD before building</strong>. <code>yay</code> shows it to you. The source should be <code>github.com/amkillam/ryzen_smu</code> only.</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">yay -S ryzen_smu-dkms-git
-echo ryzen_smu | sudo tee /etc/modules-load.d/ryzen_smu.conf
-sudo modprobe ryzen_smu
-cat /sys/kernel/ryzen_smu_drv/version        # must print a version
-</code></pre></div>
-<p>DKMS builds it for both kernels, using the headers installed in section 5.4.</p>
-<h3 id="112-usrlocalbinpbo-curve" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="112-usrlocalbinpbo-curve"><span class="box"></span></label><span class="h-text">11.2 <code>/usr/local/bin/pbo-curve</code></span></h3>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">sudo tee /usr/local/bin/pbo-curve &gt;/dev/null &lt;&lt;'EOF'
-#!/usr/bin/env python3
-&quot;&quot;&quot;Per-core Curve Optimizer for the Ryzen 7 5800X3D via the ryzen_smu driver.
-
-SMU MP1 opcodes (0x35 set per-core, 0x48 get per-core, 0x36 reset all) are the ones
-used by github.com/svenlange2/Ryzen-5800x3d-linux-undervolting (ruv.py).
-Offsets reset on every power cycle; pbo-curve.service re-applies them.
-&quot;&quot;&quot;
-import struct
-import sys
-import time
-
-# Core 0..7, same order and values as PBO2 Tuner on Windows (all negative).
-OFFSETS = [-27, -29, -29, -30, -28, -30, -27, -28]
-
-DRV = &quot;/sys/kernel/ryzen_smu_drv/&quot;
-SMU_ARGS = DRV + &quot;smu_args&quot;
-MP1_CMD = DRV + &quot;mp1_smu_cmd&quot;
-
-OP_SET_CORE = 0x35
-OP_RESET_ALL = 0x36
-OP_GET_CORE = 0x48
-SMU_OK = 0x01
-
-
-def die(msg):
-    print(f&quot;pbo-curve: {msg}&quot;, file=sys.stderr)
-    sys.exit(1)
-
-
-def read32(path):
-    with open(path, &quot;rb&quot;) as f:
-        return struct.unpack(&quot;&lt;I&quot;, f.read(4))[0]
-
-
-def wait_ready():
-    for _ in range(50):
-        status = read32(MP1_CMD)
-        if status != 0:
-            return status
-        time.sleep(0.1)
-    die(&quot;SMU stayed busy for 5 s&quot;)
-
-
-def smu(op, arg0=0):
-    wait_ready()
-    with open(SMU_ARGS, &quot;wb&quot;) as f:
-        f.write(struct.pack(&quot;&lt;6I&quot;, arg0, 0, 0, 0, 0, 0))
-    with open(MP1_CMD, &quot;wb&quot;) as f:
-        f.write(struct.pack(&quot;&lt;I&quot;, op))
-    status = wait_ready()
-    if status != SMU_OK:
-        die(f&quot;SMU command 0x{op:02X} failed (status 0x{status:02X})&quot;)
-    with open(SMU_ARGS, &quot;rb&quot;) as f:
-        return struct.unpack(&quot;&lt;6I&quot;, f.read(24))[0]
-
-
-def core_arg(core):
-    return ((core &amp; 8) &lt;&lt; 5 | core &amp; 7) &lt;&lt; 20
-
-
-def get_offset(core):
-    value = smu(OP_GET_CORE, core_arg(core))
-    return value - 2**32 if value &gt;= 2**31 else value
-
-
-def set_offset(core, offset):
-    smu(OP_SET_CORE, core_arg(core) | (offset &amp; 0xFFFF))
-
-
-def preflight():
-    try:
-        with open(&quot;/proc/cpuinfo&quot;) as f:
-            if &quot;5800X3D&quot; not in f.read():
-                die(&quot;CPU is not a Ryzen 7 5800X3D; refusing to touch the SMU&quot;)
-        read32(DRV + &quot;version&quot;)
-    except FileNotFoundError:
-        die(&quot;ryzen_smu driver not loaded (modprobe ryzen_smu)&quot;)
-    except PermissionError:
-        die(&quot;must run as root&quot;)
-    if len(OFFSETS) != 8 or any(not -30 &lt;= o &lt;= 0 for o in OFFSETS):
-        die(&quot;OFFSETS must be 8 values between -30 and 0&quot;)
-
-
-def main():
-    cmd = sys.argv[1] if len(sys.argv) &gt; 1 else &quot;list&quot;
-    preflight()
-    if cmd == &quot;apply&quot;:
-        for core, offset in enumerate(OFFSETS):
-            set_offset(core, offset)
-            readback = get_offset(core)
-            if readback != offset:
-                die(f&quot;core {core}: wrote {offset}, read back {readback}&quot;)
-        print(&quot;pbo-curve: applied &quot; + &quot; &quot;.join(f&quot;{c}:{o}&quot; for c, o in enumerate(OFFSETS)))
-    elif cmd == &quot;list&quot;:
-        for core in range(len(OFFSETS)):
-            print(f&quot;core {core}: {get_offset(core)}&quot;)
-    elif cmd == &quot;reset&quot;:
-        smu(OP_RESET_ALL, 0)
-        print(&quot;pbo-curve: all offsets reset to 0&quot;)
-    else:
-        die(&quot;usage: pbo-curve [apply|list|reset]&quot;)
-
-
-if __name__ == &quot;__main__&quot;:
-    main()
-EOF
-sudo chmod 755 /usr/local/bin/pbo-curve
-</code></pre></div>
-<h3 id="113-test-by-hand-first" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="113-test-by-hand-first"><span class="box"></span></label><span class="h-text">11.3 Test by hand first</span></h3>
-<p>Do this before enabling the service. If the values are unstable, a reboot clears them.</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">sudo pbo-curve list        # all 0 after a fresh boot
-sudo pbo-curve apply       # pbo-curve: applied 0:-27 1:-29 ...
-sudo pbo-curve list        # matches OFFSETS
-</code></pre></div>
-<p>Stability check:
-- <strong>Full load:</strong> <code>stress-ng --cpu 16 --cpu-method all --timeout 20m</code>.
-- <strong>Light and idle use:</strong> use the PC normally for a day. Curve Optimizer instability usually shows up at light load, not under stress.
-- <strong>Watch for hardware errors:</strong> <code>journalctl -k | grep -iE 'mce|hardware error'</code>. Any hit means one core's offset is too aggressive; move that core 2–3 steps toward 0.</p>
-<h3 id="114-apply-at-boot-and-after-resume" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="114-apply-at-boot-and-after-resume"><span class="box"></span></label><span class="h-text">11.4 Apply at boot and after resume</span></h3>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">sudo tee /etc/systemd/system/pbo-curve.service &gt;/dev/null &lt;&lt;'EOF'
-[Unit]
-Description=Apply per-core Curve Optimizer offsets (Ryzen 7 5800X3D)
-After=systemd-modules-load.service
-
-[Service]
-Type=oneshot
-ExecStartPre=/usr/bin/modprobe ryzen_smu
-ExecStart=/usr/local/bin/pbo-curve apply
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo tee /etc/systemd/system/pbo-curve-resume.service &gt;/dev/null &lt;&lt;'EOF'
-[Unit]
-Description=Re-apply Curve Optimizer offsets after resume
-After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/local/bin/pbo-curve apply
-
-[Install]
-WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
-EOF
-
-sudo systemctl daemon-reload
-sudo systemctl enable --now pbo-curve.service
-sudo systemctl enable pbo-curve-resume.service
-journalctl -b -u pbo-curve.service                    # &quot;applied ...&quot;
-</code></pre></div>
-<p>To undo: <code>sudo systemctl disable pbo-curve.service pbo-curve-resume.service</code>, then reboot.</p>
+<h2 id="11-per-core-curve-optimizer-ryzen-7-5800x3d-only" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="11-per-core-curve-optimizer-ryzen-7-5800x3d-only"><span class="box"></span></label><span class="h-text">11. Per-core Curve Optimizer (Ryzen 7 5800X3D only)</span></h2>
+<p>Some boards don't expose Curve Optimizer for the 5800X3D in the BIOS. These scripts write the per-core offsets at runtime to the CPU's SMU through the <code>ryzen_smu</code> kernel driver, as PBO2 Tuner does on Windows. <strong>Only the 5800X3D is supported</strong>: the scripts refuse any other CPU. Offsets reset on every power cycle; a boot service and a resume service re-apply them.</p>
+<ol>
+<li>In <code>config.sh</code>: <code>UNDERVOLT=yes</code> and <code>CO_OFFSETS</code> with one value per core (-30 to 0, core 0 first), e.g. the ones PBO2 Tuner uses on Windows.</li>
+<li><code>./undervolt.sh install</code>: builds <code>ryzen_smu-dkms-git</code> from the AUR, writes your offsets into <code>/usr/local/bin/pbo-curve</code> and installs the services (not enabled). <strong>Read the PKGBUILD</strong> <code>yay</code> shows you: its source must be <code>github.com/amkillam/ryzen_smu</code> only.</li>
+<li><code>./undervolt.sh test</code>: applies the offsets once and reads them back. A reboot clears them.</li>
+<li>Stability check:
+   - <strong>Full load:</strong> <code>stress-ng --cpu 16 --cpu-method all --timeout 20m</code>.
+   - <strong>Light and idle use:</strong> use the PC normally for a day. Curve Optimizer instability usually shows at light load, not under stress.
+   - <strong>Hardware errors:</strong> <code>journalctl -k | grep -iE 'mce|hardware error'</code>. Any hit means one core is too aggressive: move it 2–3 steps toward 0, rerun <code>undervolt.sh install</code>, test again.</li>
+<li><code>./undervolt.sh enable</code>: applies them at every boot and after resume. <code>./undervolt.sh disable</code> and a reboot return to stock.</li>
+</ol>
+<p><code>ryzenadj</code> can't do this: it doesn't support desktop Ryzen 5000 CPUs and has no per-core CO for them.</p>
 <hr />
 <h2 id="12-gaming" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="12-gaming"><span class="box"></span></label><span class="h-text">12. Gaming</span></h2>
 <h3 id="121-steam" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="121-steam"><span class="box"></span></label><span class="h-text">12.1 Steam</span></h3>
-<p>In Steam, go to <strong>Settings → Compatibility</strong> and enable Steam Play for all titles. Select <strong>proton-cachyos-slr</strong> as the default; it's installed system-wide from the CachyOS repo.</p>
+<p>In Steam, <strong>Settings → Compatibility</strong>: enable Steam Play for all titles and select <strong>proton-cachyos-slr</strong> as the default (installed system-wide from the CachyOS repo). If a game misbehaves, try another Proton version in the game's <em>Properties → Compatibility</em>, and check its ProtonDB page.</p>
 <p>Per-game launch options:</p>
 <div class="code"><div class="code-bar"><span>text</span><button type="button" class="copy">Copy</button></div><pre><code>gamemoderun %command%
 mangohud gamemoderun %command%          # with the FPS / frametime overlay
 </code></pre></div>
-<p>If a game misbehaves on Wayland, run it through gamescope at native resolution:</p>
-<div class="code"><div class="code-bar"><span>text</span><button type="button" class="copy">Copy</button></div><pre><code>gamescope -W 2560 -H 1080 -r 144 -f -- gamemoderun %command%
+<p>If a game misbehaves on Wayland, run it through gamescope at your monitor's resolution and refresh rate:</p>
+<div class="code"><div class="code-bar"><span>text</span><button type="button" class="copy">Copy</button></div><pre><code>gamescope -W 2560 -H 1440 -r 165 -f -- gamemoderun %command%
 </code></pre></div>
-<h3 id="122-black-desert-standalone-launcher" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="122-black-desert-standalone-launcher"><span class="box"></span></label><span class="h-text">12.2 Black Desert (standalone launcher)</span></h3>
-<p>Run it through Lutris (installed) with a GE-Proton runner. Once the game window is up, run <code>hyprctl clients</code> and check its <code>class</code>. If it isn't <code>blackdesert64.exe</code>, update the <code>black-desert</code> window rule in <code>hyprland.lua</code> so tearing and opacity apply.</p>
+<h3 id="122-other-launchers" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="122-other-launchers"><span class="box"></span></label><span class="h-text">12.2 Other launchers</span></h3>
+<ul>
+<li><strong>Epic, GOG, Amazon:</strong> Heroic Games Launcher.</li>
+<li><strong>Battle.net, EA app, Ubisoft Connect, standalone launchers:</strong> Lutris, with a GE-Proton runner (download runners in ProtonUp-Qt).</li>
+<li>For low-latency tearing in a game outside Steam, find its class with <code>hyprctl clients</code> and add a window rule like the <code>black-desert</code> example in <code>hyprland.lua</code>.</li>
+</ul>
 <hr />
 <h2 id="13-optional" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="13-optional"><span class="box"></span></label><span class="h-text">13. Optional</span></h2>
 <h3 id="131-old-hdd-as-a-bulkbackup-disk" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="131-old-hdd-as-a-bulkbackup-disk"><span class="box"></span></label><span class="h-text">13.1 Old HDD as a bulk/backup disk</span></h3>
-<p>The Samsung HD502HJ has about 49 000 power-on hours. Its existing NTFS partition can be used as-is; changing it to ext4 requires erasing it after copying any files you want to keep. Use this old drive for bulk files or a second copy of backups only, never as the only copy of anything. <code>smartd</code> (enabled in 5.7) watches its health.</p>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">findmnt -S /dev/sda1                       # verify the source and current mount point
-if findmnt -rn -S /dev/sda1 &gt;/dev/null; then sudo umount /dev/sda1; fi
-cd ~/arch-setup
-./extras.sh hdd  # ERASES the Samsung HDD and creates ext4; confirms disk model and path first
+<p>An old internal SATA drive can hold bulk files or a second copy of backups. <code>extras.sh hdd</code> <strong>erases</strong> it, creates ext4, mounts it at <code>/mnt/hdd</code> and adds a Thunar bookmark.</p>
+<ol>
+<li>Set <code>HDD_MODEL</code> and <code>HDD_SERIAL</code> (<code>lsblk -dno NAME,MODEL,SERIAL,TRAN</code>) in <code>config.local.sh</code>. Keep the serial out of public repos.</li>
+<li>Copy anything you want to keep off the drive. If the file manager mounted it, unmount it (<code>findmnt</code> shows where).</li>
+<li>Run:</li>
+</ol>
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">cd ~/arch-setup &amp;&amp; ./extras.sh hdd
 </code></pre></div>
-<p>The script checks the Samsung's SATA connection and serial, mounts its new ext4 filesystem at <code>/mnt/hdd</code>, verifies the filesystem UUID, sets ownership, adds that UUID to <code>/etc/fstab</code> for future boots, and creates a Thunar sidebar bookmark. The current read-only NTFS mount is <code>/run/media/htxzz77/New Volume</code>; <code>/run/media</code> is a temporary file-manager mount location, not evidence of a USB source.</p>
+<p>The script checks the SATA connection, model and serial, shows the drive's power-on hours from SMART, and asks you to type the disk path before erasing it. It adds the new filesystem to <code>/etc/fstab</code> by UUID and verifies the mount. <code>smartd</code> (5.7) watches its health.</p>
 <h3 id="132-development-stack" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="132-development-stack"><span class="box"></span></label><span class="h-text">13.2 Development stack</span></h3>
-<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">sudo pacman -S docker docker-compose docker-buildx
-sudo systemctl enable --now docker.socket
-sudo usermod -aG docker &quot;$USER&quot;       # root-equivalent access; log out/in to apply
-
-sudo pacman -S code                   # VS Code (OSS build, Open VSX extensions)
-# or Microsoft's build with the official marketplace (AUR):  yay -S visual-studio-code-bin
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">./extras.sh dev       # Docker (+ compose, buildx), and VS Code (OSS build, or Microsoft's from the AUR)
 </code></pre></div>
-<p>Docker's data lives on the <code>@docker</code> subvolume, so it stays out of system snapshots.</p>
+<p>Joining the <code>docker</code> group gives root-equivalent access; log out and back in to use it. Docker's data lives on the <code>@docker</code> subvolume, so it stays out of system snapshots.</p>
+<h3 id="133-bluetooth" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="133-bluetooth"><span class="box"></span></label><span class="h-text">13.3 Bluetooth</span></h3>
+<p>With <code>BLUETOOTH=yes</code>, BlueZ and the Blueman tray app are installed and <code>bluetooth.service</code> is enabled: pair controllers and headphones from Blueman (or <code>bluetoothctl</code>). To add it later, set <code>BLUETOOTH=yes</code>, then <code>sudo pacman -S bluez bluez-utils blueman &amp;&amp; sudo systemctl enable --now bluetooth</code>.</p>
 <hr />
 <h2 id="14-final-verification-checklist" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="14-final-verification-checklist"><span class="box"></span></label><span class="h-text">14. Final verification checklist</span></h2>
+<p><code>./check.sh</code> runs these checks for your configuration and reports every failure together:</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Check</th>
-<th>Command</th>
 <th>Expected</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>NVIDIA driver + KMS</td>
-<td><code>nvidia-smi</code>; <code>cat /sys/module/nvidia_drm/parameters/modeset</code></td>
-<td>615.x; <code>Y</code></td>
-</tr>
-<tr>
-<td>ReBAR</td>
-<td><code>nvidia-smi -q \| grep -A3 BAR1</code></td>
-<td>Total 8192 MiB</td>
-</tr>
-<tr>
-<td>CPU driver</td>
-<td><code>cat /sys/devices/system/cpu/amd_pstate/status</code></td>
-<td><code>active</code></td>
-</tr>
-<tr>
-<td>Scheduler</td>
-<td><code>scxctl get</code></td>
-<td>bpfland, Gaming</td>
-</tr>
-<tr>
-<td>Curve Optimizer</td>
-<td><code>sudo pbo-curve list</code></td>
-<td>-27 -29 -29 -30 -28 -30 -27 -28</td>
-</tr>
-<tr>
-<td>zram</td>
-<td><code>zramctl</code>; <code>swapon --show</code></td>
-<td>zram0, zstd</td>
+<td>Graphics</td>
+<td>NVIDIA: driver loaded, <code>nvidia_drm</code> modeset <code>Y</code>, <strong>ReBAR</strong> (BAR1 covers all VRAM). AMD: <code>amdgpu</code> + RADV. Intel: <code>i915</code>/<code>xe</code> + ANV.</td>
 </tr>
 <tr>
 <td>Monitors</td>
-<td><code>hyprctl monitors</code></td>
-<td>DP-x 2560x1080@144 (VRR), HDMI-A-1 1920x1080@144</td>
+<td>Every <code>MONITORS</code> entry with a refresh rate runs at that resolution and rate</td>
+</tr>
+<tr>
+<td>CPU driver</td>
+<td><code>amd_pstate</code> <code>active</code> (AMD) or <code>intel_pstate</code> (Intel)</td>
+</tr>
+<tr>
+<td>Scheduler, zram, NTSYNC</td>
+<td>bpfland; <code>zram0</code> in use; <code>/dev/ntsync</code> present</td>
+</tr>
+<tr>
+<td>Curve Optimizer</td>
+<td>Offsets applied (<code>UNDERVOLT=yes</code> only)</td>
+</tr>
+<tr>
+<td>Kernel and boot</td>
+<td>A CachyOS kernel is running; snapshots in the Limine menu; <code>FALLBACK_KERNEL</code> entry present</td>
 </tr>
 <tr>
 <td>Audio</td>
-<td><code>wpctl status</code>; <code>pw-metadata -n settings</code></td>
-<td>Onboard analog sink/source selected; quantum 512</td>
+<td>Quantum 512; a default speaker and microphone set</td>
 </tr>
 <tr>
-<td>Snapshots</td>
-<td><code>snapper -c root list</code>; <code>limine-list</code></td>
-<td>"fresh install" + Snapshots menu</td>
-</tr>
-<tr>
-<td>Fallback kernel</td>
-<td>Limine menu</td>
-<td>linux-cachyos-lts boots</td>
-</tr>
-<tr>
-<td>Services</td>
-<td><code>systemctl --failed</code>; <code>systemctl --user --failed</code></td>
-<td>none</td>
-</tr>
-<tr>
-<td>RAM in use at idle</td>
-<td><code>free -h</code></td>
-<td>measure it; don't trust guesses</td>
+<td>Services, network</td>
+<td>No failed units; network connected</td>
 </tr>
 </tbody>
 </table></div>
+<p>If ReBAR shows as off, enable <em>Above 4G Decoding</em> and <em>Re-Size BAR</em> in the BIOS (section 2). If <code>amd_pstate</code> is missing, enable CPPC in the BIOS.</p>
 <hr />
 <h2 id="15-maintenance-recovery" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="15-maintenance-recovery"><span class="box"></span></label><span class="h-text">15. Maintenance &amp; recovery</span></h2>
 <ul>
-<li><strong>Updates:</strong> <code>yay</code> (or <code>sudo pacman -Syu</code>). Read <a href="https://archlinux.org/news/" target="_blank" rel="noopener">https://archlinux.org/news/</a> before big updates; <code>yay -Pw</code> shows unread news. <code>snap-pac</code> snapshots every transaction automatically.</li>
-<li><strong>AUR:</strong> only <code>ryzen_smu-dkms-git</code> (and optionally VS Code). Review PKGBUILD diffs on every update.</li>
+<li><strong>Updates:</strong> <code>yay</code> (or <code>sudo pacman -Syu</code>), about once a week. Read <a href="https://archlinux.org/news/" target="_blank" rel="noopener">https://archlinux.org/news/</a> before big updates; <code>yay -Pw</code> shows unread news. <code>snap-pac</code> snapshots every transaction automatically.</li>
+<li><strong>AUR:</strong> only <code>ryzen_smu-dkms-git</code> (undervolt) and optionally VS Code. Review PKGBUILD diffs on every update.</li>
 <li><strong>Broken boot after an update:</strong>
-  1. In the Limine menu, boot <strong>linux-cachyos-lts</strong> first.
+  1. In the Limine menu, boot your <code>FALLBACK_KERNEL</code> first.
   2. If that also fails, boot a snapshot, then run <code>sudo limine-snapper-restore</code>.</li>
-<li><strong>Limine boot entry gone</strong> (e.g. after a BIOS update): the fallback at <code>EFI/BOOT/BOOTX64.EFI</code> still boots. Afterwards, run <code>sudo limine-install</code> to recreate the NVRAM entry.</li>
+<li><strong>Limine boot entry gone</strong> (e.g. after a BIOS update): the fallback at <code>EFI/BOOT/BOOTX64.EFI</code> still boots. Afterwards, run <code>sudo limine-install</code> to recreate the entry.</li>
+<li><strong>Changing kernel later:</strong> <code>sudo pacman -S linux-cachyos-bore linux-cachyos-bore-headers</code> (+ <code>linux-cachyos-bore-nvidia-open</code> with <code>nvidia-open</code>); Limine adds the entry automatically.</li>
 <li><strong>Mirrors:</strong> <code>reflector.timer</code> refreshes them weekly. <strong>Package cache:</strong> <code>paccache.timer</code> keeps the last 3 versions.</li>
 <li><strong>Kernel parameters:</strong> edit <code>/etc/kernel/cmdline</code>, then run <code>sudo limine-update</code>.</li>
+<li><strong>Backups:</strong> snapshots protect the system, not your files. Copy <code>/home</code> to another disk or a cloud service regularly.</li>
 </ul>
+<hr />
+<h2 id="appendix-reference-build" class="step"><label class="done-toggle" title="Mark as done"><input type="checkbox" data-step="appendix-reference-build"><span class="box"></span></label><span class="h-text">Appendix: reference build</span></h2>
+<p>The machine this guide was first written for, as an example of filled-in values.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Detail</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>Ryzen 7 5800X3D (Zen 3)</td>
+<td><code>x86-64-v3</code> repos; Curve Optimizer via section 11</td>
+</tr>
+<tr>
+<td>Board</td>
+<td>Gigabyte B450M DS3H V2</td>
+<td>No Curve Optimizer in its BIOS</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>4×8 GB DDR4-3200, mixed kits</td>
+<td>Memtest before installing</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>RTX 3070 (GA104), ReBAR on</td>
+<td><code>nvidia-open</code></td>
+</tr>
+<tr>
+<td>Install disk</td>
+<td>Kingston NV2 1 TB</td>
+<td>btrfs + zstd</td>
+</tr>
+<tr>
+<td>Monitors</td>
+<td>LG UltraWide 2560×1080 @ 144 Hz (DisplayPort); SuperFrame Ace 27" 1920×1080 @ 144 Hz (HDMI)</td>
+<td>VRR on the DisplayPort monitor only</td>
+</tr>
+<tr>
+<td>Peripherals</td>
+<td>Logitech G502 HERO, Corsair K95 RGB Platinum, Logitech G PRO X (3.5 mm)</td>
+<td>Piper, ckb-next</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Realtek RTL8111 Gigabit, wired</td>
+<td>In-kernel <code>r8169</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Its <code>config.local.sh</code> (disk serial omitted):</p>
+<div class="code"><div class="code-bar"><span>shell</span><button type="button" class="copy">Copy</button></div><pre><code class="language-bash">USERNAME=htxzz77
+HOST_NAME=MINDEXTENSION
+TIMEZONE=America/Sao_Paulo
+LOCALES=(en_US.UTF-8 pt_BR.UTF-8)
+LANG_DEFAULT=en_US.UTF-8
+KEYMAP=br-abnt2
+KB_LAYOUT=br
+MIRROR_COUNTRIES=BR,US
+INSTALL_DISK_MODEL=&quot;KINGSTON SNV2S1000G&quot;
+CPU_VENDOR=amd
+GPU_DRIVER=nvidia-open
+KERNEL=linux-cachyos
+FALLBACK_KERNEL=linux-cachyos-lts
+MONITORS=(&quot;ULTRAWIDE|2560x1080@144|1920x0|1|2&quot; &quot;HDMI-A-1|1920x1080@144|0x0|1|0&quot;)
+CORSAIR_KEYBOARD=yes
+GAMING_MOUSE=yes
+HEADSETCONTROL=yes
+UNDERVOLT=yes
+CO_OFFSETS=(-27 -29 -29 -30 -28 -30 -27 -28)
+</code></pre></div>
 <hr />
 <h2 id="sources">Sources</h2>
 <ul>
-<li>CachyOS repo setup: <a href="https://wiki.cachyos.org/features/optimized_repos/" target="_blank" rel="noopener">https://wiki.cachyos.org/features/optimized_repos/</a> and the official <code>cachyos-repo.sh</code></li>
-<li>Arch Wiki: <a href="https://wiki.archlinux.org/title/NVIDIA" target="_blank" rel="noopener">NVIDIA</a>, <a href="https://wiki.archlinux.org/title/NVIDIA/Tips_and_tricks" target="_blank" rel="noopener">NVIDIA/Tips and tricks</a>, <a href="https://wiki.archlinux.org/title/Limine" target="_blank" rel="noopener">Limine</a>, <a href="https://wiki.archlinux.org/title/PipeWire" target="_blank" rel="noopener">PipeWire</a>, <a href="https://wiki.archlinux.org/title/Zram" target="_blank" rel="noopener">Zram</a></li>
-<li>Arch news: <a href="https://archlinux.org/news/" target="_blank" rel="noopener">NVIDIA 590 switches to open modules</a>, <a href="https://archlinux.org/news/" target="_blank" rel="noopener">AUR malicious packages incident</a></li>
-<li>Hyprland 0.56.2 source (<code>example/hyprland.lua</code>, <code>src/config</code>) and wiki (Tearing, UWSM, Monitors, Environment variables): <a href="https://github.com/hyprwm/Hyprland" target="_blank" rel="noopener">https://github.com/hyprwm/Hyprland</a>, <a href="https://github.com/hyprwm/hyprland-wiki" target="_blank" rel="noopener">https://github.com/hyprwm/hyprland-wiki</a></li>
+<li>CachyOS: optimised repos <a href="https://wiki.cachyos.org/features/optimized_repos/" target="_blank" rel="noopener">https://wiki.cachyos.org/features/optimized_repos/</a>, the official <code>cachyos-repo.sh</code>, kernel variants <a href="https://wiki.cachyos.org/features/kernel/" target="_blank" rel="noopener">https://wiki.cachyos.org/features/kernel/</a></li>
+<li>Arch Wiki: <a href="https://wiki.archlinux.org/title/Installation_guide" target="_blank" rel="noopener">Installation guide</a>, <a href="https://wiki.archlinux.org/title/Iwd" target="_blank" rel="noopener">iwd</a>, <a href="https://wiki.archlinux.org/title/NVIDIA" target="_blank" rel="noopener">NVIDIA</a>, <a href="https://wiki.archlinux.org/title/AMDGPU" target="_blank" rel="noopener">AMDGPU</a>, <a href="https://wiki.archlinux.org/title/Intel_graphics" target="_blank" rel="noopener">Intel graphics</a>, <a href="https://wiki.archlinux.org/title/Limine" target="_blank" rel="noopener">Limine</a>, <a href="https://wiki.archlinux.org/title/PipeWire" target="_blank" rel="noopener">PipeWire</a>, <a href="https://wiki.archlinux.org/title/Zram" target="_blank" rel="noopener">Zram</a></li>
+<li>Arch news: <a href="https://archlinux.org/news/" target="_blank" rel="noopener">NVIDIA 590 drops Maxwell/Pascal/Volta and switches to open modules</a>, <a href="https://archlinux.org/news/" target="_blank" rel="noopener">AUR malicious packages incident</a></li>
+<li>Hyprland 0.56.2 source and wiki (Tearing, UWSM, Monitors, Environment variables): <a href="https://github.com/hyprwm/Hyprland" target="_blank" rel="noopener">https://github.com/hyprwm/Hyprland</a>, <a href="https://github.com/hyprwm/hyprland-wiki" target="_blank" rel="noopener">https://github.com/hyprwm/hyprland-wiki</a></li>
 <li>Limine tooling: <a href="https://gitlab.com/Zesko/limine-entry-tool" target="_blank" rel="noopener">https://gitlab.com/Zesko/limine-entry-tool</a>, <a href="https://gitlab.com/Zesko/limine-snapper-sync" target="_blank" rel="noopener">https://gitlab.com/Zesko/limine-snapper-sync</a></li>
 <li>sched-ext loader: <a href="https://github.com/sched-ext/scx-loader" target="_blank" rel="noopener">https://github.com/sched-ext/scx-loader</a></li>
 <li>ly: <a href="https://codeberg.org/fairyglade/ly" target="_blank" rel="noopener">https://codeberg.org/fairyglade/ly</a></li>
+<li>Linux game compatibility: <a href="https://www.protondb.com" target="_blank" rel="noopener">https://www.protondb.com</a>, <a href="https://areweanticheatyet.com" target="_blank" rel="noopener">https://areweanticheatyet.com</a></li>
 <li>5800X3D undervolting on Linux: <a href="https://github.com/svenlange2/Ryzen-5800x3d-linux-undervolting" target="_blank" rel="noopener">https://github.com/svenlange2/Ryzen-5800x3d-linux-undervolting</a>, driver <a href="https://github.com/amkillam/ryzen_smu" target="_blank" rel="noopener">https://github.com/amkillam/ryzen_smu</a></li>
-<li>HeadsetControl (G PRO X support): <a href="https://github.com/Sapd/HeadsetControl" target="_blank" rel="noopener">https://github.com/Sapd/HeadsetControl</a></li>
-<li>SuperFrame Ace 27 specs: <a href="https://www.kabum.com.br/produto/1057758" target="_blank" rel="noopener">https://www.kabum.com.br/produto/1057758</a></li>
+<li>HeadsetControl: <a href="https://github.com/Sapd/HeadsetControl" target="_blank" rel="noopener">https://github.com/Sapd/HeadsetControl</a>; libratbag/Piper: <a href="https://github.com/libratbag/libratbag" target="_blank" rel="noopener">https://github.com/libratbag/libratbag</a></li>
 </ul></article></main>
 </div>
 <script>

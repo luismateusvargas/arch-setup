@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
-# Stage 3: per-core Curve Optimizer for the Ryzen 7 5800X3D. Guide section 11.
+# Stage 3: per-core Curve Optimizer for the Ryzen 7 5800X3D only. Guide section 11.
+# Needs UNDERVOLT=yes and CO_OFFSETS in config.sh.
 #   ./undervolt.sh install   ryzen_smu driver (AUR) + pbo-curve + systemd units (not enabled)
 #   ./undervolt.sh test      apply the offsets once and read them back (reboot clears them)
 #   ./undervolt.sh enable    apply at every boot and after resume
 #   ./undervolt.sh disable   stop applying them (reboot to return to stock)
 #   ./undervolt.sh status    services + current per-core offsets
-# Offsets live in files/usr/local/bin/pbo-curve (OFFSETS = [...]).
+# install writes CO_OFFSETS from config.sh into /usr/local/bin/pbo-curve; rerun it after changing them.
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$REPO_DIR/scripts/lib.sh"
+source "$REPO_DIR/scripts/hw.sh"
+load_config "$REPO_DIR"
 FILES="$REPO_DIR/files"
 
 [[ $EUID -ne 0 ]] || die "run as your normal user, not root or sudo"
+[[ $UNDERVOLT == yes ]] || die "UNDERVOLT is not yes in config.sh"
+[[ $(detect_cpu_model) == *5800X3D* ]] || die "only the Ryzen 7 5800X3D is supported (this CPU: $(detect_cpu_model))"
+(( ${#CO_OFFSETS[@]} == 8 )) || die "CO_OFFSETS in config.sh needs 8 values, one per core (has ${#CO_OFFSETS[@]})"
 
 cmd_install() {
     step "ryzen_smu driver (AUR)"
@@ -24,7 +30,14 @@ cmd_install() {
     ok "ryzen_smu loaded"
 
     step "pbo-curve + systemd units"
-    install_file "$FILES/usr/local/bin/pbo-curve" /usr/local/bin/pbo-curve 755 sudo
+    local tmp offsets
+    offsets=$(IFS=,; echo "${CO_OFFSETS[*]}")
+    tmp=$(mktemp)
+    sed "s/^OFFSETS = \[.*\]/OFFSETS = [${offsets//,/, }]/" "$FILES/usr/local/bin/pbo-curve" > "$tmp"
+    grep -q "^OFFSETS = \[-\?[0-9]" "$tmp" || die "could not write CO_OFFSETS into pbo-curve"
+    install_file "$tmp" /usr/local/bin/pbo-curve 755 sudo
+    rm -f "$tmp"
+    info "offsets: ${CO_OFFSETS[*]}"
     install_file "$FILES/etc/systemd/system/pbo-curve.service" /etc/systemd/system/pbo-curve.service 644 sudo
     install_file "$FILES/etc/systemd/system/pbo-curve-resume.service" /etc/systemd/system/pbo-curve-resume.service 644 sudo
     sudo systemctl daemon-reload

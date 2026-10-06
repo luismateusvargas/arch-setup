@@ -1,20 +1,11 @@
 -- Hyprland 0.56 Lua config. Environment variables live in ~/.config/uwsm/env.
 
 ----------------------------------------------------------------------
--- Monitors   (verify port names with: hyprctl monitors all)
+-- Monitors   (port names: hyprctl monitors all)
 ----------------------------------------------------------------------
-local MAIN = "DP-1"       -- LG UltraWide 2560x1080 @ 144 Hz, DisplayPort (check DP-1/2/3)
-local SIDE = "HDMI-A-1"   -- SuperFrame Ace 27" 1920x1080 @ 144 Hz, HDMI
-
--- vrr = 2: VRR only for fullscreen apps (avoids NVIDIA desktop flicker)
--- vrr = 0 on HDMI: NVIDIA has no VRR over HDMI without HDMI 2.1 VRR
-hl.monitor({ output = SIDE, mode = "1920x1080@144", position = "0x0",    scale = 1, vrr = 0 })
-hl.monitor({ output = MAIN, mode = "2560x1080@144", position = "1920x0", scale = 1, vrr = 2 })
-hl.monitor({ output = "",   mode = "preferred",     position = "auto",   scale = 1 })
-
-hl.workspace_rule({ workspace = "1", monitor = MAIN, default = true })  -- games, editor
-hl.workspace_rule({ workspace = "2", monitor = MAIN })                  -- browser
-hl.workspace_rule({ workspace = "3", monitor = SIDE, default = true })  -- docs, Discord, terminal
+-- >>> monitors: post-install.sh replaces this block from MONITORS in config.sh
+hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
+-- <<< monitors
 
 ----------------------------------------------------------------------
 -- Programs
@@ -27,13 +18,13 @@ local menu        = "rofi -show drun"
 local function app(cmd) return hl.dsp.exec_cmd("uwsm app -- " .. cmd) end
 
 ----------------------------------------------------------------------
--- Autostart   (waybar, swaync, hypridle run as user services, see 8.3)
+-- Autostart   (waybar, swaync, hypridle, polkit agent run as user services, see 8.3)
 ----------------------------------------------------------------------
 hl.on("hyprland.start", function()
     hl.exec_cmd("systemctl --user start hyprpolkitagent.service")
     hl.exec_cmd("uwsm app -- awww-daemon")
     hl.exec_cmd("uwsm app -- wl-paste --watch cliphist store")
-    hl.exec_cmd("uwsm app -- ckb-next --background")
+    hl.exec_cmd("uwsm app -- ckb-next --background")   -- CORSAIR_KEYBOARD=yes only
     hl.exec_cmd("sh -c 'sleep 1; if [ -f \"$HOME/Pictures/wallpaper.jpg\" ]; then awww img \"$HOME/Pictures/wallpaper.jpg\"; else awww img /usr/share/hypr/wall0.png; fi'")
 end)
 
@@ -89,11 +80,12 @@ hl.config({
     },
 
     input = {
-        kb_layout          = "us",      -- "br" for ABNT2
+        kb_layout          = "us",      -- KB_LAYOUT / KB_VARIANT in config.sh
+        kb_variant         = "",
         numlock_by_default = true,
         follow_mouse       = 1,
         sensitivity        = 0,
-        accel_profile      = "flat",    -- raw 1:1 mouse input for the G502
+        accel_profile      = "flat",    -- raw 1:1 mouse input (no acceleration), like games expect
     },
 
     dwindle = { preserve_split = true },
@@ -144,7 +136,7 @@ hl.bind(mod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" 
 hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
--- K95 media keys / volume wheel
+-- Keyboard media keys / volume wheel
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true })
 hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true })
@@ -155,7 +147,7 @@ hl.bind("XF86AudioPrev",        hl.dsp.exec_cmd("playerctl previous"),   { locke
 ----------------------------------------------------------------------
 -- Window rules
 ----------------------------------------------------------------------
--- Black Desert (Wine/Proton via Lutris). Verify the class with: hyprctl clients
+-- Example for a game outside Steam (Black Desert via Lutris). Find a game's class with: hyprctl clients
 hl.window_rule({
     name      = "black-desert",
     match     = { class = "(?i)^blackdesert64\\.exe$" },

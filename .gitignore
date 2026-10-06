@@ -1,5 +1,7 @@
-# Notes about this specific machine (disk serials, UUIDs): kept local, see README.
+# Notes and values for one specific machine (disk serials, UUIDs): kept local, see README.
 SETUP_NOTES.md
+config.local.sh
+config.suggested.sh
 
 # HWiNFO reports contain serial numbers and MAC addresses: never publish them.
 *.HTM

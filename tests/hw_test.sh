@@ -78,19 +78,19 @@ expect 'intel ucode' "$(cpu_ucode)" intel-ucode
 # Config validation: the shipped template must fail, a filled-in config must pass
 # shellcheck source=config.sh
 source "$(dirname "${BASH_SOURCE[0]}")/../config.sh"
-validate_config >/dev/null 2>&1 && fail_test 'empty template accepted'
+validate_config "$@" >/dev/null 2>&1 && fail_test 'empty template accepted'
 USERNAME=friend HOST_NAME=gaming-pc TIMEZONE=Europe/Berlin KEYMAP=de-latin1 KB_LAYOUT=de MIRROR_COUNTRIES=DE,US
 INSTALL_DISK_MODEL="Samsung SSD 990 PRO 2TB" CPU_VENDOR=intel GPU_DRIVER=amd KERNEL=linux-cachyos-bore
 MONITORS=("ASUS VG27|2560x1440@165|0x0|1|2" "DP-2|highrr|auto|1.25|0")
-validate_config >/dev/null 2>&1 || { validate_config; fail_test 'valid config rejected'; }
+validate_config "$@" >/dev/null 2>&1 || { validate_config "$@"; fail_test 'valid config rejected'; }
 MONITORS=("ASUS|2560x1440|0x0|1")
-validate_config >/dev/null 2>&1 && fail_test 'monitor entry with 4 fields accepted'
+validate_config "$@" >/dev/null 2>&1 && fail_test 'monitor entry with 4 fields accepted'
 MONITORS=()
 KERNEL=linux-zen
-validate_config >/dev/null 2>&1 && fail_test 'non-CachyOS kernel accepted'
+validate_config "$@" >/dev/null 2>&1 && fail_test 'non-CachyOS kernel accepted'
 KERNEL=linux-cachyos-lts
-validate_config >/dev/null 2>&1 && fail_test 'KERNEL equal to FALLBACK_KERNEL accepted'
+validate_config "$@" >/dev/null 2>&1 && fail_test 'KERNEL equal to FALLBACK_KERNEL accepted'
 KERNEL=linux-cachyos UNDERVOLT=yes CO_OFFSETS=(-10 -40)
-validate_config >/dev/null 2>&1 && fail_test 'offset below -30 accepted'
+validate_config "$@" >/dev/null 2>&1 && fail_test 'offset below -30 accepted'
 
 printf 'hardware helper tests passed\n'

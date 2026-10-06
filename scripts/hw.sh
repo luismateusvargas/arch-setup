@@ -194,6 +194,7 @@ validate_monitor() {
 # validate_config [hardware]
 # Checks config values. With "hardware", also compares them with the machine it runs on
 # (meant for the live ISO, before install.sh erases anything). Returns 1 on any error.
+# shellcheck disable=SC2120
 validate_config() {
     local hw=${1:-} v
     _errors=() _warnings=()

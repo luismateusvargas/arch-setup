@@ -50,8 +50,7 @@ install_file "$lua_tmp" "$CFG/hypr/hyprland.lua"
 rm -f "$lua_tmp"
 grep -E '^(local (MAIN|SIDE)|hl\.monitor)' "$CFG/hypr/hyprland.lua" | sed 's/^/    /'
 
-step "Idle, lock, bar, session services (8.3)"
-install_file "$FILES/home/.config/hypr/hypridle.conf"  "$CFG/hypr/hypridle.conf"
+step "Bar and session services (8.3)"
 bar_tmp=$(mktemp)
 CPU_HWMON="$(cpu_hwmon_dir || true)" GPU_DRIVER="$GPU_DRIVER" UNDERVOLT="$UNDERVOLT" \
     python3 "$REPO_DIR/scripts/render.py" waybar "$FILES/home/.config/waybar/config.jsonc" "$bar_tmp"
@@ -69,7 +68,7 @@ if [[ $GPU_DRIVER != intel ]]; then
 fi
 [[ -e $CFG/hypr/hyprlock.conf ]] || install -Dm644 /usr/share/hypr/hyprlock.conf "$CFG/hypr/hyprlock.conf"
 systemctl --user add-wants graphical-session.target \
-    waybar.service swaync.service hypridle.service hyprpolkitagent.service
+    waybar.service swaync.service hyprpolkitagent.service
 xdg-user-dirs-update
 mkdir -p "$HOME/Pictures"
 [[ -e $HOME/Pictures/wallpaper.jpg ]] || info "No custom wallpaper at ~/Pictures/wallpaper.jpg; using Hyprland's bundled wallpaper"
@@ -105,7 +104,7 @@ if pgrep -x Hyprland >/dev/null; then
 fi
 
 step "Stage 2 complete"
-info "Log out (SUPER+SHIFT+E) and back in so waybar, swaync, hypridle and the polkit agent start."
+info "Log out (SUPER+SHIFT+E) and back in so waybar, swaync and the polkit agent start."
 info "Then: EasyEffects setup (guide 9.3); check your default speaker and mic with wpctl status (guide 9.2),"
 [[ $UNDERVOLT == yes ]] && info "      undervolt: ./undervolt.sh install, ./undervolt.sh test, ./undervolt.sh enable"
 info "      verify everything: ./check.sh"

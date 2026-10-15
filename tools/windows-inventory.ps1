@@ -144,8 +144,7 @@ foreach ($s in $screens | Sort-Object @{ Expression = 'Primary'; Descending = $t
     $link = 'other'
     if ($s.Link -eq 5) { $link = 'HDMI' }
     if ($s.Link -eq 10 -or $s.Link -eq 11) { $link = 'DisplayPort' }
-    $vrr = 2
-    if ($link -eq 'HDMI' -and $gpuDriver -like 'nvidia*') { $vrr = 0 }
+    $vrr = 0
     $line = '{0}|{1}x{2}@{3}|{4}x{5}|1|{6}' -f $s.Name, $s.Width, $s.Height, $s.Hz, ($s.X - $minX), ($s.Y - $minY), $vrr
     $monitorLines += $line
     $primary = ''
@@ -153,7 +152,7 @@ foreach ($s in $screens | Sort-Object @{ Expression = 'Primary'; Descending = $t
     Write-Host ("   {0}: {1}x{2} @ {3} Hz via {4}{5}" -f $s.Name, $s.Width, $s.Height, $s.Hz, $link, $primary)
 }
 Note 'SCALE is written as 1: if Windows uses 125 %/150 % (Settings > Display > Scale), change it to 1.25/1.5.'
-Note 'VRR is 2 (fullscreen apps only); 0 on HDMI with NVIDIA, which has no VRR over HDMI without HDMI 2.1 VRR.'
+Note 'VRR is written as 0 (off): adaptive sync caused black screens on the reference NVIDIA/DisplayPort build. To try it, set 1 or 2 and also enable FreeSync/G-Sync in the monitor menu.'
 
 # ------------------------------------------------------------------ Language, keyboard, time zone
 Section 'Language, keyboard, time zone'

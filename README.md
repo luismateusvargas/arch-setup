@@ -50,7 +50,8 @@ In the Limine menu choose your kernel. At the `ly` login choose **Hyprland (uwsm
 It sets up:
 - snapper and the Limine snapshot menu;
 - the session environment (NVIDIA variables only with an NVIDIA driver) and `hyprland.lua`, with `MONITORS` matched against the connected monitors and your keyboard layout;
-- hypridle, Waybar (CPU sensor and GPU stats picked for your hardware) and the session services;
+- Waybar (CPU sensor and GPU stats picked for your hardware) and the session services;
+- the hyprlock config for the manual lock (`SUPER+L`). Nothing locks, blanks the screen or suspends on its own;
 - PipeWire latency, and hides the graphics card's HDMI audio (`HIDE_GPU_AUDIO`).
 
 Log out (`SUPER+SHIFT+E`) and back in afterwards. To change monitors later, edit `MONITORS` and run `post-install.sh` again.

@@ -84,10 +84,10 @@ limine-list | sed 's/^/    /'
 
 step "Desktop, audio, gaming, peripherals (5.5)"
 desktop=(hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk uwsm libnewt
-         hyprpolkitagent hyprlock hypridle awww waybar swaync rofi kitty
+         hyprpolkitagent hyprlock awww waybar swaync rofi kitty
          grim slurp wl-clipboard cliphist qt5-wayland qt6-wayland
          noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono-nerd otf-font-awesome ttf-liberation
-         thunar gvfs xdg-user-dirs firefox nwg-look playerctl ly)
+         thunar gvfs xdg-user-dirs firefox nwg-look playerctl xorg-xrandr ly)
 audio=(pipewire pipewire-alsa pipewire-pulse pipewire-jack lib32-pipewire lib32-pipewire-jack
        wireplumber rtkit pavucontrol easyeffects lsp-plugins-lv2 calf)
 gaming=(steam lutris umu-launcher proton-cachyos-slr gamemode lib32-gamemode

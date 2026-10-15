@@ -95,11 +95,12 @@ FALLBACK_KERNEL=linux-cachyos-lts
 #             right starts at the left one's width (1920x0). Or auto.
 #             Windows: Settings > System > Display shows the arrangement.
 #   SCALE     1 for 100 %, 1.25, 1.5, 2 (Windows: Display > Scale), or auto.
-#   VRR       adaptive sync (FreeSync/G-Sync): 0 off, 1 always, 2 fullscreen apps only (best for
-#             NVIDIA, avoids desktop flicker). NVIDIA has no VRR over HDMI unless the monitor
-#             supports HDMI 2.1 VRR: use 0 there.
+#   VRR       adaptive sync (FreeSync/G-Sync): 0 off (safe default), 1 always, 2 fullscreen apps
+#             only. On the reference NVIDIA build VRR caused black screens: use 0 AND turn FreeSync
+#             off in the monitor's own menu (both must agree). NVIDIA has no VRR over HDMI unless
+#             the monitor supports HDMI 2.1 VRR: use 0 there.
 # Example (reference build: LG UltraWide on DisplayPort right of a 1080p monitor on HDMI):
-#   MONITORS=("ULTRAWIDE|2560x1080@144|1920x0|1|2" "HDMI-A-1|1920x1080@144|0x0|1|0")
+#   MONITORS=("ULTRAWIDE|2560x1080@144|1920x0|1|0" "HDMI-A-1|1920x1080@144|0x0|1|0")
 MONITORS=()
 
 # ============================================================== 5. Optional extras (yes/no)

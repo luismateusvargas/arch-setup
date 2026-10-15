@@ -18,7 +18,7 @@ local menu        = "rofi -show drun"
 local function app(cmd) return hl.dsp.exec_cmd("uwsm app -- " .. cmd) end
 
 ----------------------------------------------------------------------
--- Autostart   (waybar, swaync, hypridle, polkit agent run as user services, see 8.3)
+-- Autostart   (waybar, swaync, polkit agent run as user services, see 8.3)
 ----------------------------------------------------------------------
 hl.on("hyprland.start", function()
     hl.exec_cmd("systemctl --user start hyprpolkitagent.service")
@@ -26,6 +26,10 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("uwsm app -- wl-paste --watch cliphist store")
     hl.exec_cmd("uwsm app -- ckb-next --background")   -- CORSAIR_KEYBOARD=yes only
     hl.exec_cmd("sh -c 'sleep 1; if [ -f \"$HOME/Pictures/wallpaper.jpg\" ]; then awww img \"$HOME/Pictures/wallpaper.jpg\"; else awww img /usr/share/hypr/wall0.png; fi'")
+    -- XWayland games pick X screen 0 for resolution and placement; make it the main monitor
+    if MAIN then
+        hl.exec_cmd("sh -c 'for i in $(seq 30); do xrandr --output " .. MAIN .. " --primary 2>/dev/null && exit; sleep 1; done'")
+    end
 end)
 
 ----------------------------------------------------------------------
@@ -113,7 +117,7 @@ hl.bind(mod .. " + Q",           hl.dsp.window.close())
 hl.bind(mod .. " + F",           hl.dsp.window.fullscreen())
 hl.bind(mod .. " + V",           hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mod .. " + P",           hl.dsp.window.pseudo())
-hl.bind(mod .. " + L",           hl.dsp.exec_cmd("loginctl lock-session"))
+hl.bind(mod .. " + L",           hl.dsp.exec_cmd("pidof hyprlock || hyprlock"))   -- manual lock only; nothing locks automatically
 hl.bind(mod .. " + SHIFT + E",   hl.dsp.exec_cmd("uwsm stop"))       -- clean logout (don't use hl.dsp.exit with uwsm)
 hl.bind(mod .. " + SHIFT + V",   hl.dsp.exec_cmd("cliphist list | rofi -dmenu | cliphist decode | wl-copy"))
 hl.bind("Print",                 hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
@@ -147,27 +151,13 @@ hl.bind("XF86AudioPrev",        hl.dsp.exec_cmd("playerctl previous"),   { locke
 ----------------------------------------------------------------------
 -- Window rules
 ----------------------------------------------------------------------
--- Example for a game outside Steam (Black Desert via Lutris). Find a game's class with: hyprctl clients
-hl.window_rule({
-    name      = "black-desert",
-    match     = { class = "(?i)^blackdesert64\\.exe$" },
-    immediate = true,   -- allow tearing (lowest input latency) when fullscreen
-    opaque    = true,
-})
-
 -- Steam games run as XWayland windows with class steam_app_<appid>
 hl.window_rule({
-    name      = "steam-games",
-    match     = { class = "^steam_app_[0-9]+$" },
-    immediate = true,
-    opaque    = true,
-})
-
--- Never lock or blank the screen while something is fullscreen (games, video)
-hl.window_rule({
-    name         = "idle-inhibit-fullscreen",
-    match        = { class = ".*" },
-    idle_inhibit = "fullscreen",
+    name       = "steam-games",
+    match      = { class = "^steam_app_[0-9]+$" },
+    immediate  = true,
+    opaque     = true,
+    fullscreen = true,  -- force real fullscreen so Waybar never draws over XWayland/Wine games
 })
 
 hl.window_rule({

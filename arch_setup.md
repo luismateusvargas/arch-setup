@@ -125,14 +125,14 @@ One line per monitor; the first is the main one (workspaces 1–2), the second g
 
 ```bash
 #          MATCH       MODE             POSITION  SCALE  VRR
-MONITORS=("ULTRAWIDE|2560x1080@144|1920x0|1|2" "HDMI-A-1|1920x1080@144|0x0|1|0")
+MONITORS=("ULTRAWIDE|2560x1080@144|1920x0|1|0" "HDMI-A-1|1920x1080@144|0x0|1|0")
 ```
 
 - **MATCH:** part of the monitor's name as Windows shows it (Advanced display → *Display information*), e.g. `LG ULTRAWIDE`, `VG27AQ`, or a Linux port name such as `DP-1` or `HDMI-A-1`. Port names only exist on Linux; names work from Windows.
 - **MODE:** `WIDTHxHEIGHT@HZ`, or `highrr` (highest refresh rate), or `preferred`.
 - **POSITION:** top-left corner in pixels. The leftmost monitor is `0x0`; a monitor to its right starts at the left one's width (`1920x0`). Or `auto`.
 - **SCALE:** `1` for 100 %, `1.25`, `1.5`, `2`, as in Windows' *Scale* setting.
-- **VRR** (FreeSync/G-Sync): `0` off, `1` always, `2` fullscreen apps only (best on NVIDIA: no desktop flicker). NVIDIA has no VRR over HDMI unless the monitor supports HDMI 2.1 VRR, so use `0` there.
+- **VRR** (FreeSync/G-Sync): `0` off (the safe default), `1` always, `2` fullscreen apps only. On the reference build (RTX 3070, LG UltraWide on DisplayPort) VRR caused black screens every few seconds and on menu opens in CS2 and Black Desert Online; the fix was `0` here **and** FreeSync turned off in the monitor's own on-screen menu (the two must agree). Only try `1` or `2` if your monitor and NVIDIA driver are stable with it. NVIDIA has no VRR over HDMI unless the monitor supports HDMI 2.1 VRR, so use `0` there.
 
 `MONITORS=()` lets Hyprland pick every monitor's preferred mode. You can change monitors any time later: edit `MONITORS` and rerun `post-install.sh`.
 
@@ -329,7 +329,7 @@ The package lists are in `scripts/chroot.sh`:
 
 | Group | What |
 |---|---|
-| Desktop | Hyprland + portals, uwsm, hyprlock/hypridle, Waybar, swaync (notifications), rofi (app launcher), kitty (terminal), Thunar (files), Firefox, screenshots (grim/slurp), clipboard history, fonts, the `ly` login screen |
+| Desktop | Hyprland + portals, uwsm, hyprlock (manual lock), Waybar, swaync (notifications), rofi (app launcher), kitty (terminal), Thunar (files), Firefox, screenshots (grim/slurp), clipboard history, fonts, the `ly` login screen |
 | Audio | PipeWire (+ PulseAudio/JACK compatibility), WirePlumber, pavucontrol, EasyEffects with LSP and Calf plugins |
 | Gaming | Steam, Lutris, Heroic (Epic/GOG/Amazon), umu-launcher, `proton-cachyos-slr`, GameMode, MangoHud, gamescope, ProtonUp-Qt, winetricks |
 | System | sched-ext schedulers, `yay` (AUR helper), DKMS, stress-ng |
@@ -438,20 +438,25 @@ Keys, for anyone used to Windows (`SUPER` is the Windows key):
 | `SUPER+arrows` | Move focus |
 | `SUPER+mouse drag` (left / right button) | Move / resize window |
 | `SUPER+S` | Scratchpad workspace |
-| `SUPER+L` | Lock |
+| `SUPER+L` | Lock the screen (hyprlock) |
 | `SUPER+SHIFT+V` | Clipboard history |
 | `Print` / `SHIFT+Print` | Screenshot of a region / the whole screen, to the clipboard |
 | `SUPER+SHIFT+E` | Log out |
 
 Notes on tearing and VRR:
-- `allow_tearing` is on, and Steam games (plus the example rule for a game outside Steam) opt in with the `immediate` window rule for the lowest input latency. Tearing only happens when the game is fullscreen **and** nothing else is visible on that monitor; `hyprctl monitors` shows `tearingBlockedBy` if it's blocked.
-- Inside a monitor's VRR range, VRR handles frame pacing; tearing only matters above the maximum refresh rate. Play on a VRR-capable monitor.
-- To add a rule for another game, find its window class with `hyprctl clients` and copy the `black-desert` rule.
+- `allow_tearing` is on, and Steam games opt in with the `immediate` window rule for the lowest input latency. Tearing only happens when the game is fullscreen **and** nothing else is visible on that monitor; `hyprctl monitors` shows `tearingBlockedBy` if it's blocked.
+- The same `steam-games` rule sets `fullscreen = true`, so every Steam game is a real Hyprland fullscreen window and Waybar never draws over it (XWayland/Proton "Fullscreen" modes otherwise leave a floating window under the bar).
+- VRR is off on every monitor in the reference build (`vrr = 0`, FreeSync off in the monitor menu): with it on, the NVIDIA DisplayPort link blacked out every few seconds. If you enable it on your hardware, test a game before trusting it.
+- To add a rule for another game (outside Steam), find its window class with `hyprctl clients` and copy the `steam-games` rule with a matching `class`.
+- **XWayland games and two monitors:** X11 games (most Steam and Proton games) start on X screen 0 and take its resolution. Without help that's whichever monitor XWayland detected first, so a game can open on the side monitor, offer only that monitor's resolutions, or stretch across the main one with the mouse clicks off target. At login `hyprland.lua` runs `xrandr --output <MAIN> --primary`, so the main monitor becomes screen 0. Check with `xrandr --listmonitors`: the main monitor should be `0:` and marked `*`.
 
-### 8.3 Session services, idle, lock, bar
+### 8.3 Session services and bar
 
-- Waybar, swaync, hypridle and the polkit agent run as systemd user services in the uwsm session.
-- [`hypridle.conf`](files/home/.config/hypr/hypridle.conf): lock after 10 minutes, screen off after 15; never while something is fullscreen.
+- Waybar, swaync and the polkit agent run as systemd user services in the uwsm session.
+- **No idle actions:** nothing locks the screen, turns it off or suspends the PC on its own. hypridle isn't installed, no lock runs before sleep, and systemd-logind keeps its default `IdleAction=ignore`.
+- **Lock:** only by hand with `SUPER+L`, which runs `pidof hyprlock || hyprlock` (pressing it again doesn't open a second lock screen). The config is `~/.config/hypr/hyprlock.conf`, copied from the package default on first run. Unlock with your user password.
+- **Locking doesn't stop anything:** hyprlock only covers the screen and takes keyboard and mouse input. Games (including ones minimized or on another workspace), downloads, voice chat and network connections keep running. Only suspend, logging out or running out of memory would stop them.
+- **Upgrading an older install:** earlier versions installed hypridle and enabled its user service. Check with `systemctl --user is-enabled hypridle.service`; if it's enabled, run `systemctl --user disable --now hypridle.service`, or remove it with `sudo pacman -Rns hypridle`. Then add the `SUPER+L` line from the repo's `hyprland.lua` to your own and run `hyprctl reload`.
 - **Waybar** ([`config.jsonc`](files/home/.config/waybar/config.jsonc), [`style.css`](files/home/.config/waybar/style.css)): floating pills in the Hyprland colours. `post-install.sh` adapts it to your hardware:
 
 | Module | Shows | Hardware |
@@ -559,7 +564,7 @@ gamescope -W 2560 -H 1440 -r 165 -f -- gamemoderun %command%
 
 - **Epic, GOG, Amazon:** Heroic Games Launcher.
 - **Battle.net, EA app, Ubisoft Connect, standalone launchers:** Lutris, with a GE-Proton runner (download runners in ProtonUp-Qt).
-- For low-latency tearing in a game outside Steam, find its class with `hyprctl clients` and add a window rule like the `black-desert` example in `hyprland.lua`.
+- For low-latency tearing in a game outside Steam, find its class with `hyprctl clients` and add a window rule like the `steam-games` one in `hyprland.lua`, with that class.
 
 ---
 
@@ -638,7 +643,7 @@ The machine this guide was first written for, as an example of filled-in values.
 | RAM | 4×8 GB DDR4-3200, mixed kits | Memtest before installing |
 | GPU | RTX 3070 (GA104), ReBAR on | `nvidia-open` |
 | Install disk | Kingston NV2 1 TB | btrfs + zstd |
-| Monitors | LG UltraWide 2560×1080 @ 144 Hz (DisplayPort); SuperFrame Ace 27" 1920×1080 @ 144 Hz (HDMI) | VRR on the DisplayPort monitor only |
+| Monitors | LG UltraWide 2560×1080 @ 144 Hz (DisplayPort); SuperFrame Ace 27" 1920×1080 @ 144 Hz (HDMI) | VRR off everywhere; FreeSync off in the LG's menu |
 | Peripherals | Logitech G502 HERO, Corsair K95 RGB Platinum, Logitech G PRO X (3.5 mm) | Piper, ckb-next |
 | Network | Realtek RTL8111 Gigabit, wired | In-kernel `r8169` |
 

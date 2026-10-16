@@ -158,6 +158,7 @@ hl.window_rule({
     immediate  = true,
     opaque     = true,
     fullscreen = true,  -- force real fullscreen so Waybar never draws over XWayland/Wine games
+    confine_pointer = true,  -- keep the cursor inside the game (non-FPS games like BDO never lock it themselves)
 })
 
 hl.window_rule({

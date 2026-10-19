@@ -26,11 +26,19 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("uwsm app -- wl-paste --watch cliphist store")
     hl.exec_cmd("uwsm app -- ckb-next --background")   -- CORSAIR_KEYBOARD=yes only
     hl.exec_cmd("sh -c 'sleep 1; if [ -f \"$HOME/Pictures/wallpaper.jpg\" ]; then awww img \"$HOME/Pictures/wallpaper.jpg\"; else awww img /usr/share/hypr/wall0.png; fi'")
-    -- XWayland games pick X screen 0 for resolution and placement; make it the main monitor
+    xwayland_primary()
+end)
+
+-- XWayland games pick the primary X screen for resolution and placement; make it the main monitor.
+-- Hyprland drops the primary whenever it re-sends the monitor layout, so set it again on every change.
+function xwayland_primary()
     if MAIN then
         hl.exec_cmd("sh -c 'for i in $(seq 30); do xrandr --output " .. MAIN .. " --primary 2>/dev/null && exit; sleep 1; done'")
     end
-end)
+end
+hl.on("monitor.added",          xwayland_primary)
+hl.on("monitor.layout_changed", xwayland_primary)
+hl.on("config.reloaded",        xwayland_primary)
 
 ----------------------------------------------------------------------
 -- Look and feel
@@ -159,6 +167,7 @@ hl.window_rule({
     opaque     = true,
     fullscreen = true,  -- force real fullscreen so Waybar never draws over XWayland/Wine games
     confine_pointer = true,  -- keep the cursor inside the game (non-FPS games like BDO never lock it themselves)
+    content    = "game",  -- Wine/XWayland never tag themselves; without this direct_scanout = 2 refuses to scan out (blocked by "content type")
 })
 
 hl.window_rule({
